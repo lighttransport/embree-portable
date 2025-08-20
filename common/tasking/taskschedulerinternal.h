@@ -378,7 +378,7 @@ namespace embree
 
   RTC_NAMESPACE_END
 
-#if defined(RTC_NAMESPACE)
+#if defined(EMBREE_API_NAMESPACE)
     using RTC_NAMESPACE::TaskScheduler;
 #endif
 }
