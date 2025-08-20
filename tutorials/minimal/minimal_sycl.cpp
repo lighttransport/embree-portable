@@ -89,7 +89,7 @@ void alignedSYCLFree(const sycl::queue& queue, void* ptr)
  */
 void errorFunction(void* userPtr, enum RTCError error, const char* str)
 {
-  printf("error %d: %s\n", error, str);
+  printf("error %s: %s\n", rtcGetErrorString(error), str);
 }
 
 /*
@@ -108,8 +108,10 @@ RTCDevice initializeDevice(sycl::context& sycl_context, sycl::device& sycl_devic
   RTCDevice device = rtcNewSYCLDevice(sycl_context, "");
   rtcSetDeviceSYCLDevice(device,sycl_device);
 
-  if (!device)
-    printf("error %d: cannot create device\n", rtcGetDeviceError(NULL));
+  if (!device) {
+    printf("error %s: cannot create device. (reason: %s)\n", rtcGetErrorString(rtcGetDeviceError(NULL)), rtcGetDeviceLastErrorMessage(NULL));
+    exit(1);
+  }
 
   rtcSetDeviceErrorFunction(device, errorFunction, NULL);
   return device;
@@ -201,14 +203,14 @@ RTCScene initializeScene(RTCDevice device, const sycl::queue& queue)
  * (dx, dy, dz).
  */
 
-void castRay(sycl::queue& queue, const RTCScene scene, 
+void castRay(sycl::queue& queue, const RTCTraversable traversable,
              float ox, float oy, float oz,
              float dx, float dy, float dz, Result* result)
 {
   queue.submit([=](sycl::handler& cgh)
   {
     cgh.set_specialization_constant<feature_mask>(required_features);
-  
+
     cgh.parallel_for(sycl::range<1>(1),[=](sycl::item<1> item, sycl::kernel_handler kh)
     {
       /*
@@ -244,7 +246,7 @@ void castRay(sycl::queue& queue, const RTCScene scene,
        * There are multiple variants of rtcIntersect. This one
        * intersects a single ray with the scene.
        */
-      rtcIntersect1(scene, &rayhit, &args);
+      rtcTraversableIntersect1(traversable, &rayhit, &args);
 
       /*
        * write hit result to output buffer
@@ -255,7 +257,7 @@ void castRay(sycl::queue& queue, const RTCScene scene,
     });
   });
   queue.wait_and_throw();
-  
+
   printf("%f, %f, %f: ", ox, oy, oz);
   if (result->geomID != RTC_INVALID_GEOMETRY_ID)
   {
@@ -295,6 +297,7 @@ void enablePersistentJITCache()
 
 int main()
 {
+  try {
   enablePersistentJITCache();
 
   /* This will select the first GPU supported by Embree */
@@ -307,26 +310,32 @@ int main()
     return 1;
   }
 
-  sycl::queue sycl_queue(sycl_device); 
+  sycl::queue sycl_queue(sycl_device);
   sycl::context sycl_context(sycl_device);
-  
+
   RTCDevice device = initializeDevice(sycl_context,sycl_device);
   RTCScene scene = initializeScene(device, sycl_queue);
+  RTCTraversable traversable = rtcGetSceneTraversable(scene);
 
   Result* result = alignedSYCLMallocDeviceReadWrite<Result>(sycl_queue, 1, 16);
-  
+  result->geomID = RTC_INVALID_GEOMETRY_ID;
+
   /* This will hit the triangle at t=1. */
-  castRay(sycl_queue, scene, 0.33f, 0.33f, -1, 0, 0, 1, result);
+  castRay(sycl_queue, traversable, 0.33f, 0.33f, -1, 0, 0, 1, result);
 
   /* This will not hit anything. */
-  castRay(sycl_queue, scene, 1.00f, 1.00f, -1, 0, 0, 1, result);
-  
+  castRay(sycl_queue, traversable, 1.00f, 1.00f, -1, 0, 0, 1, result);
+
   alignedSYCLFree(sycl_queue, result);
 
   /* Though not strictly necessary in this example, you should
    * always make sure to release resources allocated through Embree. */
   rtcReleaseScene(scene);
   rtcReleaseDevice(device);
-  
+
+  } catch(std::exception& e) {
+    std::cerr << "Caught exception " << e.what() << std::endl;
+    return 1;
+  }
   return 0;
 }

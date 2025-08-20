@@ -16,15 +16,19 @@ namespace embree
     if (object) object->refInc();
     gsubtype = GTY_SUBTYPE_INSTANCE_LINEAR;
     world2local0 = one;
-    local2world = (AffineSpace3ff*) device->malloc(numTimeSteps*sizeof(AffineSpace3ff),16);
+    device->memoryMonitor(numTimeSteps*sizeof(AffineSpace3ff), false);
+    local2world = (AffineSpace3ff*) device->malloc(numTimeSteps*sizeof(AffineSpace3ff),16,EmbreeMemoryType::MALLOC);
     for (size_t i = 0; i < numTimeSteps; i++)
       local2world[i] = one;
+    device->memoryMonitor(sizeof(*this), false);
   }
 
   Instance::~Instance()
   {
     device->free(local2world);
+    device->memoryMonitor(-ssize_t(numTimeSteps*sizeof(AffineSpace3ff)), true);
     if (object) object->refDec();
+    device->memoryMonitor(-ssize_t(sizeof(*this)), false);
   }
 
   void Instance::setNumTimeSteps (unsigned int numTimeSteps_in)
@@ -32,7 +36,8 @@ namespace embree
     if (numTimeSteps_in == numTimeSteps)
       return;
 
-    AffineSpace3ff* local2world2 = (AffineSpace3ff*) device->malloc(numTimeSteps_in*sizeof(AffineSpace3ff),16);
+    device->memoryMonitor(numTimeSteps_in*sizeof(AffineSpace3ff), false);
+    AffineSpace3ff* local2world2 = (AffineSpace3ff*) device->malloc(numTimeSteps_in*sizeof(AffineSpace3ff),16,EmbreeMemoryType::MALLOC);
 
     for (size_t i = 0; i < min(numTimeSteps, numTimeSteps_in); i++) {
       local2world2[i] = local2world[i];
@@ -43,6 +48,7 @@ namespace embree
     }
 
     device->free(local2world);
+    device->memoryMonitor(-ssize_t(numTimeSteps*sizeof(AffineSpace3ff)), true);
     local2world = local2world2;
 
     Geometry::setNumTimeSteps(numTimeSteps_in);
@@ -98,6 +104,7 @@ namespace embree
 
     local2world[timeStep] = xfm;
     gsubtype = GTY_SUBTYPE_INSTANCE_LINEAR;
+    Geometry::update();
   }
 
   void Instance::setQuaternionDecomposition(const AffineSpace3ff& qd, unsigned int timeStep)
@@ -107,10 +114,22 @@ namespace embree
 
     local2world[timeStep] = qd;
     gsubtype = GTY_SUBTYPE_INSTANCE_QUATERNION;
+    Geometry::update();
   }
 
   AffineSpace3fa Instance::getTransform(float time)
   {
+    if (likely(numTimeSteps <= 1))
+      return getLocal2World();
+    else
+      return getLocal2World(time);
+  }
+
+  AffineSpace3fa Instance::getTransform(size_t i, float time)
+  {
+    if (i != 0)
+      throw_RTCError(RTC_ERROR_INVALID_ARGUMENT, "instance has only primitive 0.");
+
     if (likely(numTimeSteps <= 1))
       return getLocal2World();
     else
@@ -125,12 +144,36 @@ namespace embree
 
   void Instance::commit()
   {
+    if (!object)
+      throw_RTCError(RTC_ERROR_INVALID_OPERATION,"Instanced scene is not set. Use rtcSetGeometryInstancedScene to set the scene to instance.");
+
     if (unlikely(gsubtype == GTY_SUBTYPE_INSTANCE_QUATERNION))
       world2local0 = rcp(quaternionDecompositionToAffineSpace(local2world[0]));
     else
       world2local0 = rcp(local2world[0]);
 
     Geometry::commit();
+  }
+
+  size_t Instance::getGeometryDataDeviceByteSize() const {
+    return 16 * (((sizeof(Instance) + numTimeSteps * sizeof(AffineSpace3ff)) + 15) / 16);
+  }
+
+  void Instance::convertToDeviceRepresentation(size_t offset, char* data_host, char* data_device) const {
+    // save offset for later when overriding local2world with device ptr
+    size_t offsetInstance = offset;
+
+    std::memcpy(data_host + offsetInstance, (void*)this, sizeof(Instance));
+    offset += sizeof(Instance);
+    for (size_t t = 0; t < numTimeSteps; ++t) {
+      std::memcpy(data_host + offset, &(local2world[t]), sizeof(AffineSpace3ff));
+      offset += sizeof(AffineSpace3ff);
+    }
+
+    // override local2world value with device ptr in geometry_data_host
+    Instance* instance = (Instance*)(data_host + offsetInstance);
+    instance->object = ((Scene*)(instance->object))->getTraversable();
+    instance->local2world = (AffineSpace3ff*)(data_device + offsetInstance + sizeof(Instance));
   }
 
   /* 

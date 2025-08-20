@@ -171,7 +171,7 @@ namespace embree {
                      const float f)
   {
     int phi = taskIndex;
-    for (unsigned int theta = 0; theta < data.numTheta; theta++)
+    for (int theta = 0; theta < data.numTheta; theta++)
     {
       Vertex* v = &vertices[phi * data.numTheta + theta];
       const float phif = phi * float(pi) * rcpNumPhi;
@@ -199,7 +199,7 @@ namespace embree {
     rtcInitIntersectArguments(&iargs);
     iargs.feature_mask = (RTCFeatureFlags) (FEATURE_MASK);
   
-    rtcIntersect1(data.g_curr_scene, RTCRayHit_(ray),&iargs);
+    rtcTraversableIntersect1(data.g_traversable, RTCRayHit_(ray),&iargs);
     RayStats_addRay(stats);
     
     /* shade pixels */
@@ -218,7 +218,7 @@ namespace embree {
       rtcInitOccludedArguments(&sargs);
       sargs.feature_mask = (RTCFeatureFlags) (FEATURE_MASK);
       
-      rtcOccluded1(data.g_curr_scene, RTCRay_(shadow),&sargs);
+      rtcTraversableOccluded1(data.g_traversable, RTCRay_(shadow),&sargs);
       RayStats_addShadowRay(stats);
       
       /* add light contribution */
@@ -276,7 +276,7 @@ namespace embree {
           animateSphere((int)i, threadIndex, vertices, rcpNumTheta, rcpNumPhi, pos, r, f);
       });
 #else
-    for (unsigned int phi = 0; phi < data.numPhi + 1; phi++) for (int theta = 0; theta < data.numTheta; theta++)
+    for (int phi = 0; phi < data.numPhi + 1; phi++) for (int theta = 0; theta < data.numTheta; theta++)
                                                         {
                                                           Vertex* v = &vertices[phi * data.numTheta + theta];
                                                           const float phif = phi * float(pi) * rcpNumPhi;
@@ -362,6 +362,8 @@ namespace embree {
     rtcCommitScene(data.g_scene_0);
     rtcCommitScene(data.g_scene_1);
     rtcCommitScene(data.g_scene_2);
+
+    data.g_traversable = rtcGetSceneTraversable(data.g_curr_scene);
   }
   
   /* called by the C++ code for cleanup */

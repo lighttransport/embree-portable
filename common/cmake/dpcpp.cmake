@@ -72,6 +72,7 @@ IF (EMBREE_SYCL_SUPPORT)
            ${SYCL_COMPILER_LIB_DIR}/sycl[0-9].lib
            ${SYCL_COMPILER_LIB_DIR}/sycl[0-9][0-9].lib)
     ENDIF()
+    LIST(GET SYCL_LIB 0 SYCL_LIB)
     GET_FILENAME_COMPONENT(SYCL_LIB_NAME ${SYCL_LIB} NAME_WE)
   ELSE()
     SET(SYCL_LIB_NAME "sycl")
@@ -143,10 +144,16 @@ IF (EMBREE_SYCL_SUPPORT)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-pessimizing-move") # disabled: warning: moving a temporary object prevents copy elision [-Wpessimizing-move]
 
   IF (SYCL_ONEAPI_ICX AND WIN32)
+    IF (${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER_EQUAL 2024.0)
+      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I\"${SYCL_COMPILER_DIR}/../opt/compiler/include/sycl\" -I\"${SYCL_COMPILER_DIR}/../opt/compiler/include/sycl/sycl\"")       # disable warning from SYCL header
+    ENDIF()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I\"${SYCL_COMPILER_DIR}/../include/sycl\" -I\"${SYCL_COMPILER_DIR}/../include/\"")       # disable warning from SYCL header
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Qstd=c++17")
   ELSE()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+    IF (SYCL_ONEAPI_ICX AND ${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER_EQUAL 2024.0)
+      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isystem \"${SYCL_COMPILER_DIR}/../opt/compiler/include/sycl\" -isystem \"${SYCL_COMPILER_DIR}/../opt/compiler/include/sycl/sycl\"")       # disable warning from SYCL header
+    ENDIF()
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -isystem \"${SYCL_COMPILER_DIR}/../include/sycl\" -isystem \"${SYCL_COMPILER_DIR}/../include/\"")       # disable warning from SYCL header
   ENDIF()
 
@@ -166,6 +173,8 @@ IF(SYCL_ONEAPI_ICX)
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /Qimf-use-svml:false")
     SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} /Qno-intel-lib")
     SET(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} /Qno-intel-lib")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /Qoption,link,/DEPENDENTLOADFLAG:0x2000")
+    SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /Qoption,link,/DEPENDENTLOADFLAG:0x2000")
   ELSE()
     SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -static-intel")
     SET(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -static-intel")

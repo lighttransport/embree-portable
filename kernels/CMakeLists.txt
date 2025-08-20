@@ -6,7 +6,6 @@ IF (EMBREE_SYCL_RT_SIMULATION)
 ENDIF()
 
 IF (EMBREE_SYCL_SUPPORT)
-  ADD_SUBDIRECTORY(rthwif)
   ADD_SUBDIRECTORY(level_zero)
 ENDIF()
 
@@ -48,6 +47,7 @@ SET(EMBREE_LIBRARY_FILES
   common/geometry.cpp
   common/scene_user_geometry.cpp
   common/scene_instance.cpp
+  common/scene_instance_array.cpp
   common/scene_triangle_mesh.cpp
   common/scene_quad_mesh.cpp
   common/scene_curves.cpp
@@ -62,6 +62,7 @@ SET(EMBREE_LIBRARY_FILES
 
   geometry/primitive4.cpp
   geometry/instance_intersector.cpp
+  geometry/instance_array_intersector.cpp
   geometry/curve_intersector_virtual_4v.cpp
   geometry/curve_intersector_virtual_4i.cpp
   geometry/curve_intersector_virtual_4i_mb.cpp
@@ -89,9 +90,13 @@ SET(EMBREE_LIBRARY_FILES
   bvh/bvh_intersector1_bvh4.cpp
   )
 
+
 IF (EMBREE_SYCL_SUPPORT)
   SET(EMBREE_LIBRARY_FILES ${EMBREE_LIBRARY_FILES}
-  sycl/rthwif_embree_builder.cpp)
+  sycl/rthwif_embree_builder.cpp
+  sycl/scene_sycl.cpp)
+
+  set_source_files_properties(sycl/scene_sycl.cpp PROPERTIES COMPILE_FLAGS ${CMAKE_CXX_FLAGS_SYCL})
 ENDIF()
 
 IF (EMBREE_GEOMETRY_SUBDIVISION)
@@ -114,6 +119,7 @@ MACRO(embree_files TARGET ISA)
       
   SET(${TARGET}
     geometry/instance_intersector.cpp
+    geometry/instance_array_intersector.cpp
     geometry/curve_intersector_virtual_4v.cpp
     geometry/curve_intersector_virtual_4i.cpp
     geometry/curve_intersector_virtual_4i_mb.cpp
@@ -131,6 +137,7 @@ MACRO(embree_files TARGET ISA)
     LIST(APPEND ${TARGET}
       common/scene_user_geometry.cpp
       common/scene_instance.cpp
+      common/scene_instance_array.cpp
       common/scene_triangle_mesh.cpp
       common/scene_quad_mesh.cpp 
       common/scene_curves.cpp
@@ -241,6 +248,10 @@ DISABLE_STACK_PROTECTOR_FOR_INTERSECTORS(${EMBREE_LIBRARY_FILES})
 ADD_LIBRARY(embree ${EMBREE_LIB_TYPE} ${EMBREE_LIBRARY_FILES})
 
 IF (EMBREE_SYCL_SUPPORT)
+  # add link flag '-fsycl' here to include the kernel for USM prefetch from
+  # scene_sycl.cpp in embree4.dll/embree4.so
+  TARGET_LINK_OPTIONS(embree PRIVATE "-fsycl")
+
   ADD_LIBRARY(embree_sycl STATIC
     sycl/rtcore_sycl.cpp
     sycl/rthwif_embree.cpp)
@@ -337,7 +348,7 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(embree PRIVATE ${EMBREE_LIBRARIES} sys math simd lexers tasking)
 IF (EMBREE_SYCL_SUPPORT)
-  TARGET_LINK_LIBRARIES(embree PRIVATE embree_rthwif ${SYCL_LIB_NAME} ze_wrapper PUBLIC embree_sycl)
+  TARGET_LINK_LIBRARIES(embree PRIVATE ${SYCL_LIB_NAME} ze_wrapper PUBLIC embree_sycl)
 ENDIF()
 
 #TARGET_LINK_LIBRARIES(embree PRIVATE ${EMBREE_LIBRARIES} sys math simd lexers tasking ${CMAKE_LINK_FLAGS_SYCL})  # FIXME: enable this line
@@ -350,7 +361,7 @@ target_include_directories(embree PUBLIC
 # libtbb is located in same install folder as libembree
 IF(WIN32)
 ELSEIF(APPLE)
-  SET_TARGET_PROPERTIES(embree PROPERTIES INSTALL_RPATH "@rpath") # On MacOSX the app is supposed to already have an rpath set to that folder
+  SET_TARGET_PROPERTIES(embree PROPERTIES INSTALL_RPATH "@loader_path") # On MacOSX we tell dyld to find libtbb in the folder libembree is placed
 ELSE()
   SET_TARGET_PROPERTIES(embree PROPERTIES INSTALL_RPATH "$ORIGIN")  # Linux we tell ld to find libtbb in the folder libembree is placed.
 ENDIF()

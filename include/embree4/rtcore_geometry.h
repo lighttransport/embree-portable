@@ -48,7 +48,8 @@ enum RTCGeometryType
   RTC_GEOMETRY_TYPE_NORMAL_ORIENTED_CATMULL_ROM_CURVE  = 60, // flat normal-oriented Catmull-Rom curves
 
   RTC_GEOMETRY_TYPE_USER     = 120, // user-defined geometry
-  RTC_GEOMETRY_TYPE_INSTANCE = 121  // scene instance
+  RTC_GEOMETRY_TYPE_INSTANCE = 121,  // scene instance
+  RTC_GEOMETRY_TYPE_INSTANCE_ARRAY = 122,  // scene instance array
 };
 
 /* Interpolation modes for subdivision surfaces */
@@ -170,15 +171,25 @@ RTC_API void rtcSetGeometryBuffer(RTCGeometry geometry, enum RTCBufferType type,
 /* Sets a shared geometry buffer. */
 RTC_API void rtcSetSharedGeometryBuffer(RTCGeometry geometry, enum RTCBufferType type, unsigned int slot, enum RTCFormat format, const void* ptr, size_t byteOffset, size_t byteStride, size_t itemCount);
 
+/* Sets a shared host/device geometry buffer pair. */
+RTC_API void rtcSetSharedGeometryBufferHostDevice(RTCGeometry geometry, enum RTCBufferType bufferType, unsigned int slot, enum RTCFormat format, const void* ptr, const void* dptr, size_t byteOffset, size_t byteStride, size_t itemCount);
+
 /* Creates and sets a new geometry buffer. */
 RTC_API void* rtcSetNewGeometryBuffer(RTCGeometry geometry, enum RTCBufferType type, unsigned int slot, enum RTCFormat format, size_t byteStride, size_t itemCount);
+
+/* Creates and sets a new host/device geometry buffer pair. */
+RTC_API void rtcSetNewGeometryBufferHostDevice(RTCGeometry geometry, enum RTCBufferType bufferType, unsigned int slot, enum RTCFormat format, size_t byteStride, size_t itemCount, void** ptr, void** dptr);
 
 /* Returns the pointer to the data of a buffer. */
 RTC_API void* rtcGetGeometryBufferData(RTCGeometry geometry, enum RTCBufferType type, unsigned int slot);
 
+/* Returns a pointer to the buffer data on the device. Returns the same pointer as
+  rtcGetGeometryBufferData if the device is no SYCL device or if Embree is executed on a
+  system with unified memory (e.g., iGPUs). */
+RTC_API void* rtcGetGeometryBufferDataDevice(RTCGeometry geometry, enum RTCBufferType type, unsigned int slot);
+
 /* Updates a geometry buffer. */
 RTC_API void rtcUpdateGeometryBuffer(RTCGeometry geometry, enum RTCBufferType type, unsigned int slot);
-
 
 /* Sets the intersection filter callback function of the geometry. */
 RTC_API void rtcSetGeometryIntersectFilterFunction(RTCGeometry geometry, RTCFilterFunctionN filter);
@@ -219,6 +230,9 @@ RTC_SYCL_API void rtcInvokeOccludedFilterFromGeometry(const struct RTCOccludedFu
 /* Sets the instanced scene of an instance geometry. */
 RTC_API void rtcSetGeometryInstancedScene(RTCGeometry geometry, RTCScene scene);
 
+/* Sets the instanced scenes of an instance array geometry. */
+RTC_API void rtcSetGeometryInstancedScenes(RTCGeometry geometry, RTCScene* scenes, size_t numScenes);
+
 /* Sets the transformation of an instance for the specified time step. */
 RTC_API void rtcSetGeometryTransform(RTCGeometry geometry, unsigned int timeStep, enum RTCFormat format, const void* xfm);
 
@@ -228,6 +242,12 @@ RTC_API void rtcSetGeometryTransformQuaternion(RTCGeometry geometry, unsigned in
 /* Returns the interpolated transformation of an instance for the specified time. */
 RTC_API void rtcGetGeometryTransform(RTCGeometry geometry, float time, enum RTCFormat format, void* xfm);
 
+/*
+ * Returns the interpolated transformation of the instPrimID'th instance of an
+ * instance array for the specified time. If geometry is an regular instance,
+ * instPrimID must be 0.
+ */
+RTC_API void rtcGetGeometryTransformEx(RTCGeometry geometry, unsigned int instPrimID, float time, enum RTCFormat format, void* xfm);
 
 /* Sets the uniform tessellation rate of the geometry. */
 RTC_API void rtcSetGeometryTessellationRate(RTCGeometry geometry, float tessellationRate);

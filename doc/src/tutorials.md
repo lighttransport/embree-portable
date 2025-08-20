@@ -97,6 +97,14 @@ There is no image output to keep the tutorial as simple as possible.
 
 [Source Code](https://github.com/embree/embree/blob/master/tutorials/minimal/minimal.cpp)
 
+Host Device Memory
+------------------
+
+This tutorial shows four different ways to use explicit host and device memory
+with SYCL.
+
+[Source Code](https://github.com/embree/embree/blob/master/tutorials/host_device_memory/host_device_memory_device.cpp)
+
 Triangle Geometry
 -----------------
 
@@ -198,6 +206,25 @@ hit sphere, to demonstrate how the same geometry instanced in different
 ways can be distinguished.
 
 [Source Code](https://github.com/embree/embree/blob/master/tutorials/instanced_geometry/instanced_geometry_device.cpp)
+
+Instance Array Geometry
+----------------------
+
+[![][imgForest]](https://github.com/embree/embree/blob/master/tutorials/forest/forest_device.cpp)
+
+This tutorial demonstrates the usage of instance arrays in Embree. Instance arrays
+are large collections of similar objects. Examples are sand dunes that consist
+of millions of instances of a few grain models or, like here, a forest consisting of
+many instances of a few tree models.
+
+In this application can switch between representing the scene with regular
+instances or (one!) instance array. It also prints several stats, that
+demonstrate the memory savings and faster BVH build times when using instance
+arrays for such scenes. Instance arrays come with a small overhead on CPU and
+should be preferred if memory consumption is more important than raytracing
+performance.
+
+[Source Code](https://github.com/embree/embree/blob/master/tutorials/forest/forest_device.cpp)
 
 Multi Level Instancing
 ----------------------

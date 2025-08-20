@@ -1,6 +1,47 @@
 Version History
 ---------------
 
+### Embree 4.4
+
+-  Added support for passing geometry data to Embree using explicit host and SYCL device memory (see `rtcSetSharedGeometryBufferHostDevice`, `rtcNewBufferHostDevice`, and other API calls with `HostDevice` suffix).
+-  Embree does not use SYCL shared memory anymore internally on systems without host unified memory (i.e., discrete GPUs). Therefore, memory transfers are triggered by specific Embree API calls (e.g. `rtcCommitScene`, `rtcCommitBuffer`).
+-  Objects of type `RTCScene` are not accessible on a SYCL device anymore. Ray queries on SYCL devices must be performed using `RTCTraversable` objects and the `rtcTraversableIntersect` and `rtcTraversableOccluded` API calls.
+-  Embree does not query the availability of RDRAND for its ISA detection anymore, which caused issues on some older AMD CPUs.
+-  Performance improvements on GPU for the two level instancing case (RTC_MAX_INSTANCE_LEVEL_COUNT 2).
+
+### Embree 4.3.3
+-   Added RTCError RTC_ERROR_LEVEL_ZERO_RAYTRACING_SUPPORT_MISSING which can indicate a GPU driver that is too old or not installed properly.
+-   Added the API function rtcGetDeviceLastErrorMessage to query additional information about the last RTCError returned by rtcGetDeviceError. This can be used in case device creation failed and a rtcErrorFunction could not be set up for this purpose.
+-   Added the API function rtcGetErrorString which returns a string representation of a given RTCError error code. This is purely meant for convenient error information reporting on the user application side.
+-   Performance improvements on GPU for the one level instancing case (RTC_MAX_INSTANCE_LEVEL_COUNT 1).
+-   Reduced the number of unnecessary GPU-CPU USM back-migrations which can increase build performance for scene with many instances on GPU.
+-   Started adding public CI tests for streamlining integration of external pull requests.
+-   Work-around for problem with unsigned Windows binaries.
+
+### Embree 4.3.2
+-   Embree now uses level zero raytracing extension to build BVH which enables forward-compatibility. On Linux, the package intel-level-zero-gpu-raytracing has to be installed in addition to the other packages listed here [https://dgpu-docs.intel.com/](https://dgpu-docs.intel.com/).
+-   MacOS universal binary compilation now works.
+-   Some bugfixes for AVX512 on MacOS x86 machines.
+-   Known issue: It is recommended to run Embree on Intel® Data Center GPU Max Series (e.g. Intel® Data Center GPU Max 1550) with the following environment settings: NEOReadDebugKeys=1 UseKmdMigration=0
+-   Known issue: ISPC version of tutorials will not successfully build with MacOS universal binary compilation.
+
+### Embree 4.3.1
+-   Add missing EMBREE_GEOMETRY types to embree-config.cmake
+-   User defined thread count now takes precedence for internal task scheduler
+-   Fixed static linking issue with ze_wrapper library
+-   Better error reporting for SYCL platform and driver problems in embree_info and tutorial apps.
+-   Patch to glfw source is not applied by default anymore.
+-   Known issue: Running Embree on Intel® Data Center GPU Max Series with 2 tiles (e.g. Intel® Data Center GPU Max 1550) requires setting the environment variable ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE.
+-   Known issue: Embree build using Apple Clang 15 and ARM support (via the SEE2NEON library) may cause "EXEC_BAD_INSTRUCTION" runtime exceptions. Please use Apple Clang <= 14 on macOS.
+
+### Embree 4.3.0
+-   Added instance array primitive for reducing memory requirements in scenes
+    with large amounts of similar instances.
+-   Properly checks driver if L0 RTAS extension can get loaded.
+-   Added varying version of rtcGetGeometryTransform for ISPC.
+-   Fixed signature of RTCMemoryMonitorFunction for ISPC.
+-   Add support for ARM64 Windows platform in CMake.
+
 ### Embree 4.2.0
 -   SYCL version of Embree with GPU support is no longer in beta phase.
 -   Improved BVH build performance on many core machines for applications that oversubscribe threads.

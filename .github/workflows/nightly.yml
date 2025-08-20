@@ -3,13 +3,14 @@
 
 name: nightly
 
+permissions: read-all
+
 on:
   schedule:
     - cron:  '00 00 * * *'
   workflow_dispatch:
 
 jobs:
-
   ################################################################################
   ################################################################################
   # GPU tests
@@ -19,82 +20,363 @@ jobs:
   ########################################
   # Linux
   ########################################
-  continuous-linux-DG2-JIT-multilevel:
+  nightly-linux-DG2-JIT-MULTILEVEL-build:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/ubuntu:22.04
+      image: embree/ubuntu:24.04
       runs-on: '[ "Linux", "docker", "build" ]'
       project: embree
-      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-embargo.env
-      artifact-out: continuous-linux-DG2-JIT-multilevel
-      artifact-path: ./build .ctest_conf
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env
+      artifact-out: nightly-linux-DG2-JIT-MULTILEVEL-build
+      artifact-path: ./build/*.tar.gz
       cmd: |
-        scripts/test.py configure platform:x64 compiler:dpcpp ispc:ispc1.16.1 isa:SSE2 build:RelWithAssert EMBREE_SYCL_SUPPORT:ON sycl:none maxinstancelevelcount:2 tasking:TBB intensity:3
-        scripts/test.py build --debug
-        scripts/test.py build
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DG2-JIT-MULTILEVEL -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+        cmake --build build --config Release --target build
 
-  continuous-linux-DG2-JIT-multilevel-test:
+  nightly-linux-DG2-JIT-MULTILEVEL-test:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
-    needs: ["continuous-linux-DG2-JIT-multilevel"]
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    needs: ["nightly-linux-DG2-JIT-MULTILEVEL-build"]
     with:
-      image: embree/ubuntu:22.04
+      image: embree/ubuntu:24.04
       options: --device=/dev/dri:/dev/dri
       runs-on: '[ "Linux", "docker", "dg2" ]'
       project: embree
-      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-embargo.env
-      artifact-in: continuous-linux-DG2-JIT-multilevel
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu24-public.env
+      artifact-in: nightly-linux-DG2-JIT-MULTILEVEL-build
       cmd: |
-        scripts/test.py test --debug
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DG2-JIT-MULTILEVEL -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+        cmake --build build --config Release --target test_package
 
-  continuous-linux-PVC-JIT:
+  nightly-linux-DG2-JIT-PUBLIC-build:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/ubuntu:22.04
+      image: embree/ubuntu:24.04
       runs-on: '[ "Linux", "docker", "build" ]'
       project: embree
-      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-embargo.env
-      artifact-out: continuous-linux-PVC-JIT
-      artifact-path: ./build .ctest_conf
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env
+      artifact-out: nightly-linux-DG2-JIT-PUBLIC-build
+      artifact-path: ./build/*.tar.gz
       cmd: |
-        scripts/test.py configure platform:x64 compiler:dpcpp ispc:ispc1.16.1 isa:SSE2 build:RelWithAssert EMBREE_SYCL_SUPPORT:ON sycl:none tasking:TBB intensity:4
-        scripts/test.py build --debug
-        scripts/test.py build
+        module load cmake/3.25.3
+        cmake --preset linux-DG2-JIT-PUBLIC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+        cmake --build build --config Release --target build
 
-  continuous-linux-PVC-JIT-test:
+  nightly-linux-DG2-JIT-PUBLIC-test:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker_gpu.yml@devel
-    needs: ["continuous-linux-PVC-JIT"]
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    needs: ["nightly-linux-DG2-JIT-PUBLIC-build"]
     with:
-      image: embree/ubuntu:22.04
+      image: embree/ubuntu:24.04
       options: --device=/dev/dri:/dev/dri
-      runs-on: '[ "Linux", "docker", "pvc" ]'
+      runs-on: '[ "Linux", "docker", "dg2" ]'
       project: embree
-      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-embargo.env
-      artifact-in: continuous-linux-PVC-JIT
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu24-public.env
+      artifact-in: nightly-linux-DG2-JIT-PUBLIC-build
       cmd: |
-        scripts/test.py test --debug
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset linux-DG2-JIT-PUBLIC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+        cmake --build build --config Release --target test_package
+
+  # TODO: Reenable after patch
+  #nightly-linux-PVC-JIT-build:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #  with:
+  #    image: embree/ubuntu:22.04
+  #    runs-on: '[ "Linux", "docker", "build" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-public.env
+  #    artifact-out: nightly-linux-PVC-JIT-build
+  #    artifact-path: ./build/*.tar.gz
+  #    cmd: |
+  #      module load cmake/3.25.3
+  #      cmake --preset nightly-linux-PVC-JIT -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+  #      cmake --build build --config Release --target build
+
+  #nightly-linux-PVC-JIT-test:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #  needs: ["nightly-linux-PVC-JIT-build"]
+  #  with:
+  #    image: embree/ubuntu:22.04
+  #    options: --device=/dev/dri:/dev/dri
+  #    runs-on: '[ "Linux", "docker", "pvc" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-public.env
+  #    artifact-in: nightly-linux-PVC-JIT-build
+  #    cmd: |
+  #      export NEOReadDebugKeys=1
+  #      export UseKmdMigration=0
+  #      export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
+  #      module load cmake/3.25.3
+  #      cmake --preset nightly-linux-PVC-JIT -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+  #      cmake --build build --config Release --target test_package
+
+  #linux-PVC-JIT-INTERNAL-SYCL-RC-build:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #  with:
+  #    image: embree/ubuntu:22.04
+  #    runs-on: '[ "Linux", "docker", "build" ]'
+  #    project: embree
+  #    dpcpp-version: intel-llvm/sycl-rel_5_2_0-rk
+  #    artifact-out: linux-PVC-JIT-INTERNAL-SYCL-RC-build
+  #    artifact-path: ./build/*.tar.gz
+  #    cmd: |
+  #      module load cmake/3.25.3
+  #      cmake --preset linux-PVC-JIT-INTERNAL-SYCL-RC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #      cmake --build build --config Release --target build
+
+  #linux-PVC-JIT-INTERNAL-SYCL-RC-test-1T:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #  needs: ["linux-PVC-JIT-INTERNAL-SYCL-RC-build"]
+  #  with:
+  #    image: embree/ubuntu:22.04
+  #    options: --device=/dev/dri:/dev/dri
+  #    runs-on: '[ "Linux", "docker", "pvc" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/gfx-ubuntu22-internal.env
+  #    dpcpp-version: intel-llvm/sycl-rel_5_2_0-rk
+  #    artifact-in: linux-PVC-JIT-INTERNAL-SYCL-RC-build
+  #    cmd: |
+  #      export NEOReadDebugKeys=1
+  #      export UseKmdMigration=0
+  #      export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
+  #      export EnableImplicitScaling=0
+  #      module load cmake/3.25.3
+  #      cmake --preset linux-PVC-JIT-INTERNAL-SYCL-RC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #      cmake --build build --config Release --target test_package
+
+  #linux-PVC-JIT-INTERNAL-SYCL-RC-test-2T:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #  needs: ["linux-PVC-JIT-INTERNAL-SYCL-RC-build"]
+  #  with:
+  #    image: embree/ubuntu:22.04
+  #    options: --device=/dev/dri:/dev/dri
+  #    runs-on: '[ "Linux", "docker", "pvc" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/gfx-ubuntu22-internal.env
+  #    dpcpp-version: intel-llvm/sycl-rel_5_2_0-rk
+  #    artifact-in: linux-PVC-JIT-INTERNAL-SYCL-RC-build
+  #    cmd: |
+  #      module load cmake/3.25.3
+  #      export NEOReadDebugKeys=1
+  #      export UseKmdMigration=0
+  #      export ZE_FLAT_DEVICE_HIERARCHY=COMPOSITE
+  #      cmake --preset linux-PVC-JIT-INTERNAL-SYCL-RC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #      cmake --build build --config Release --target test_package
+
+  #linux-PVC-JIT-INTERNAL-SYCL-RC-test-flat:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #  needs: ["linux-PVC-JIT-INTERNAL-SYCL-RC-build"]
+  #  with:
+  #    image: embree/ubuntu:22.04
+  #    options: --device=/dev/dri:/dev/dri
+  #    runs-on: '[ "Linux", "docker", "pvc" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/gfx-ubuntu22-internal.env
+  #    dpcpp-version: intel-llvm/sycl-rel_5_2_0-rk
+  #    artifact-in: linux-PVC-JIT-INTERNAL-SYCL-RC-build
+  #    cmd: |
+  #      module load cmake/3.25.3
+  #      cmake --preset linux-PVC-JIT-INTERNAL-SYCL-RC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #      cmake --build build --config Release --target test_package
+
+  # linux-ATSM-JIT-SYCL-RC-build:
+  #   secrets: inherit
+  #   uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #   with:
+  #     image: embree/ubuntu:22.04
+  #     runs-on: '[ "Linux", "docker", "build" ]'
+  #     project: embree
+  #     dpcpp-version: intel-llvm/sycl-rel_5_2_0-rk
+  #     artifact-out: linux-ATSM-JIT-SYCL-RC-build
+  #     artifact-path: ./build/*.tar.gz
+  #     cmd: |
+  #       module load cmake/3.25.3
+  #       cmake --preset linux-DG2-JIT-PUBLIC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #       cmake --build build --config Release --target build
+  # TODO: END Reenable after patch
+
+  # linux-ATSM-JIT-PUBLIC-SYCL-RC-test:
+  #   secrets: inherit
+  #   uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #   needs: ["linux-ATSM-JIT-SYCL-RC-build"]
+  #   with:
+  #     image: embree/ubuntu:22.04
+  #     options: --device=/dev/dri:/dev/dri
+  #     runs-on: '[ "Linux", "docker", "atsm" ]'
+  #     project: embree
+  #     env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-public.env
+  #     artifact-in: linux-ATSM-JIT-SYCL-RC-build
+  #     cmd: |
+  #       module load cmake/3.25.3
+  #       cmake --preset linux-DG2-JIT-PUBLIC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #       cmake --build build --config Release --target test_package
+
+  # linux-ATSM-JIT-INTERNAL-SYCL-RC-test:
+  #   secrets: inherit
+  #   uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+  #   needs: ["linux-ATSM-JIT-SYCL-RC-build"]
+  #   with:
+  #     image: embree/ubuntu:22.04
+  #     options: --device=/dev/dri:/dev/dri
+  #     runs-on: '[ "Linux", "docker", "atsm" ]'
+  #     project: embree
+  #     env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-ubuntu22-internal.env
+  #     artifact-in: linux-ATSM-JIT-SYCL-RC-build
+  #     cmd: |
+  #       module load cmake/3.25.3
+  #       cmake --preset linux-DG2-JIT-PUBLIC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=3
+  #       cmake --build build --config Release --target test_package
 
   ########################################
   # Windows
   ########################################
 
-  continuous-windows-DG2-JIT:
+  nightly-windows-DG2-JIT-ICX-RC-build:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows_gpu.yml@devel
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/gfx-windows-public.env
+      dpcpp-version: intel/2025.0
+      artifact-out: nightly-windows-DG2-JIT-ICX-RC-build
+      artifact-path: ./build/*.zip
+      cmd: |
+        cmake --preset nightly-windows-DG2-JIT-ICX -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --config Release --target build
+
+  nightly-windows-DG2-JIT-ICX-RC-test:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    needs: ["nightly-windows-DG2-JIT-ICX-RC-build"]
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-public.env
+      dpcpp-version: intel/2025.0
+      artifact-in: nightly-windows-DG2-JIT-ICX-RC-build
+      cmd: |
+        cmake --preset nightly-windows-DG2-JIT-ICX -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --config Release --target test_package
+
+  nightly-windows-DG2-JIT-NIGHTLY-RK-bulid:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/gfx-windows-public.env
+      dpcpp-version: intel-llvm/nightly-2024-09-04
+      artifact-out: nightly-windows-DG2-JIT-NIGHTLY-RK-bulid
+      artifact-path: ./build/*.zip
+      cmd: |
+        cmake --preset nightly-windows-DG2-JIT-NIGHTLY -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --config Release --target build
+
+  nightly-windows-DG2-JIT-NIGHTLY-RK-test:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    needs: ["nightly-windows-DG2-JIT-NIGHTLY-RK-bulid"]
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-public.env
+      dpcpp-version: intel-llvm/nightly-2024-09-04
+      artifact-in: nightly-windows-DG2-JIT-NIGHTLY-RK-bulid
+      cmd: |
+        cmake --preset nightly-windows-DG2-JIT-NIGHTLY -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --config Release --target test_package
+
+  #TODO: enable internal driver tests again
+  #nightly-windows-DG2-JIT-INTERNAL-build:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+  #  with:
+  #    runs-on: '[ "Windows", "NAS", "dg2" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-internal.env
+  #    artifact-out: nightly-windows-DG2-JIT-INTERNAL-build
+  #    artifact-path: ./build/*.zip
+  #    cmd: |
+  #      cmake --preset nightly-windows-DG2-JIT -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+  #      cmake --build build --config Release --target build
+
+  #nightly-windows-DG2-JIT-INTERNAL-test:
+  #  secrets: inherit
+  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+  #  needs: ["nightly-windows-DG2-JIT-INTERNAL-build"]
+  #  with:
+  #    runs-on: '[ "Windows", "NAS", "dg2" ]'
+  #    project: embree
+  #    env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-internal.env
+  #    artifact-in: nightly-windows-DG2-JIT-INTERNAL-build
+  #    cmd: |
+  #      cmake --preset nightly-windows-DG2-JIT -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+  #      cmake --build build --config Release --target test_package
+
+  nightly-windows-DG2-JIT-PUBLIC-build:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
     with:
       runs-on: '[ "Windows", "NAS", "dg2" ]'
       project: embree
       env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-internal.env
+      artifact-out: nightly-windows-DG2-JIT-PUBLIC-build
+      artifact-path: ./build/*.zip
       cmd: |
-        python scripts/test.py configure platform:x64 compiler:dpcpp isa:SSE2 build:Release EMBREE_SYCL_SUPPORT:ON sycl:none intensity:3
-        python scripts/test.py build
-        python scripts/test.py test
+        cmake --preset nightly-windows-DG2-JIT -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --config Release --target build
         
+  nightly-windows-DG2-JIT-PUBLIC-test:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    needs: ["nightly-windows-DG2-JIT-PUBLIC-build"]
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-public.env
+      artifact-in: nightly-windows-DG2-JIT-PUBLIC-build
+      cmd: |
+        cmake --preset nightly-windows-DG2-JIT -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --config Release --target test_package
+
+  nightly-windows-DG2-MULTILEVEL-build:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-public.env
+      artifact-out: nightly-windows-DG2-MULTILEVEL-build
+      artifact-path: ./build/*.zip
+      cmd: |
+        cmake --preset nightly-windows-DG2-MULTILEVEL -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --config Release --target build
+
+  nightly-windows-DG2-MULTILEVEL-test:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
+    needs: ["nightly-windows-DG2-MULTILEVEL-build"]
+    with:
+      runs-on: '[ "Windows", "NAS", "dg2" ]'
+      project: embree
+      env-from-files: ./.github/workflows/dpcpp-sycl-nightly.env ./.github/workflows/gfx-windows-public.env
+      artifact-in: nightly-windows-DG2-MULTILEVEL-build
+      cmd: |
+        cmake --preset nightly-windows-DG2-MULTILEVEL -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --config Release --target test_package
+
   ################################################################################
   ################################################################################
   # CPU tests
@@ -105,606 +387,587 @@ jobs:
   # Linux
   ########################################
 
-  # CLANG compilation and testing of different ISAs
+  # CLANG
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_12_0-SSE2-TBB-NAMESPACE:
+  nightly-linux-DEBUG-CLANG4-SSE2-NAMESPACE:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.12.0 isa:SSE2 tasking:TBB2019.9 intensity:4 api_namespace:myembree maxinstancelevelcount:8
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-CLANG4-SSE2-NAMESPACE -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG5_0_0-ISPC1_15_0-AVX2-INT-ADDRSANITIZER:
+  nightly-linux-DEBUG-CLANG5-ISPC1_14_1-AVX2-INT-ADDRSANITIZER:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:26
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG5.0.0 ispc:ispc1.15.0 isa:AVX tasking:INT intensity:2 addrsanitizer:ON
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-CLANG5-ISPC1_14_1-AVX2-INT-ADDRSANITIZER -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_16_1-AVX2-TBB2021_2_0-STATIC:
+  nightly-linux-DEBUG-CLANG4-ISPC1_16_1-AVX2-TBB2021_9_0-STATIC:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.16.1 isa:AVX2 frequency_level:simd128 tasking:TBB2021.2.0 intensity:4 STATIC_LIB:ON
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-CLANG4-ISPC1_16_1-AVX2-TBB2021_9_0-STATIC -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-avx512vl-x64-Debug-CLANG4_0_0-ISPC1_16_1-AVX512-TBB2020_2:
+  # GCC
+
+  nightly-linux-DEBUG-CLANG4-ISPC1_16_1-AVX512VL-TBB2020_2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:26
-      runs-on: '[ "Linux", "docker", "avx512" ]'
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.16.1 isa:AVX512 frequency_level:simd256 tasking:TBB2020.2 intensity:3
-        scripts/test.py build
-        scripts/test.py test
-
-  # GCC compilation and testing of different ISAs
-
-  nightly-linux-x64-Debug-GCC-ISPC1_16_1-SSE2-TBB2021_2_0:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.16.1 isa:SSE2 tasking:TBB2021.2.0 intensity:4
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-GCC-ISPC1_16_1-AVX-TBB2019_9:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.16.1 isa:AVX tasking:TBB2019.9 intensity:4
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB2021_2_0:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 intensity:4
-        scripts/test.py build
-        scripts/test.py test
-
-  # ICX compilation and testing of different ISAs
-
-  nightly-linux-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX-TBB2019_2:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/rockylinux:8.7
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX tasking:TBB2019.2 intensity:4
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-avx512vl-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX512-TBB2019_2:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/rockylinux:8.7
-      runs-on: '[ "Linux", "docker", "avx512" ]'
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX512 frequency_level:simd256 tasking:TBB2019.2 intensity:4
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-avx512vl-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX512-TBB2019_9:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:29
       runs-on: '[ "Linux", "docker", "avx512" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX512 tasking:TBB2019.9 intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-CLANG4-ISPC1_16_1-AVX512VL-TBB2020_2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=3
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-ICX2023_0_0-ISPC1_16_1-AVX2-TBB2021_2_0:
+  nightly-linux-DEBUG-GCC-ISPC1_16_1-SSE2-TBB2021_2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.16.1 isa:AVX2 tasking:TBB2021.2.0 intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-GCC-ISPC1_16_1-SSE2-TBB2021_2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-ICX2023_0_0-ISPC1_17_0-AVX2-TBB2019_9:
+  nightly-linux-DEBUG-GCC-ISPC1_16_1-AVX-TBB2019_9:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-GCC-ISPC1_16_1-AVX-TBB2019_9 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-GCC-ISPC1_17_0-AVX2-TBB2021_2_0:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-GCC-ISPC1_17_0-AVX2-TBB2021_2_0 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  # ICX
+  nightly-linux-DEBUG-ICX2025_0-ISPC1_16_1-AVX-TBB2019_2:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/rockylinux:8.7
+      dpcpp-version: intel/2025.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-ICX-ISPC1_16_1-AVX-TBB2019_2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-avx512vl-x64-Debug-ICX2023_0_0-ISPC1_17_0-AVX512-TBB2021_5_0:
+  nightly-linux-DEBUG-ICX2025_0-ISPC1_16_1-AVX512VL-TBB2019_2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/rockylinux:8.7
+      runs-on: '[ "Linux", "docker", "avx512" ]'
+      dpcpp-version: intel/2025.0
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-ICX-ISPC1_16_1-AVX512VL-TBB2019_2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-ICX2025_0-ISPC1_16_1-AVX512-TBB2019_9:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      runs-on: '[ "Linux", "docker", "avx512" ]'
+      dpcpp-version: intel/2025.0
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-ICX-ISPC1_16_1-AVX512-TBB2019_9 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-ICX2025_0-ISPC1_16_1-AVX2-TBB2021_2_0:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      dpcpp-version: intel/2025.0
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-ICX-ISPC1_16_1-AVX2-TBB2021_2_0 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-ICX2025_0-ISPC1_17_0-AVX2-TBB2019_9:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/rockylinux:8.7
+      dpcpp-version: intel/2025.0
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-ICX-ISPC1_17_0-AVX2-TBB2019_9 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-ICX2025_0-ISPC1_17_0-AVX512VL-TBB2021_5_0:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/ubuntu:22.04
       runs-on: '[ "Linux", "docker", "avx512" ]'
+      dpcpp-version: intel/2025.0
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug threads:4 compiler:ICX2023.0.0 ispc:ispc1.17.0 isa:AVX512 frequency_level:simd256 tasking:TBB2021.5.0 intensity:2
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-DEBUG-ICX-ISPC1_17_0-AVX512VL-TBB2021_5_0 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  # Testing on different Linux distributions
+  # Testing different distros
 
-  nightly-ubuntu20_04-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
+  nightly-ubuntu20_04-DEBUG:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/ubuntu:20.04
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.17.0 isa:AVX2 tasking:TBB intensity:3
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-distrotest-ISPC1_14_1-TBB2021_2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-ubuntu20_04-x64-Release-GCC-ISPC1_14_1-AVX2-TBB2021_2_0:
+  nightly-ubuntu20_04-RELEASE-ISPC1_14_1-TBB2021_2_0:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/ubuntu:20.04
       cmd: |
-        scripts/test.py configure platform:x64 build:Release compiler:GCC ispc:ispc1.14.1 isa:AVX2 tasking:TBB2021.2.0 intensity:2
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-distrotest-ISPC1_14_1-TBB2021_2 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-ubuntu16_04-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
+
+  nightly-fedora32-DEBUG-AVX512:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/ubuntu:16.04
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.17.0 isa:AVX2 tasking:TBB MIN_WIDTH:ON intensity:3
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-centos7_4-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/centos:7.4
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.17.0 isa:AVX2 tasking:TBB COMPACT_POLYS:ON intensity:3
-        scripts/test.py build
-        scripts/test.py test
-
-  #nightly-centos7_0-x64-Debug-GCC-ISPC1_17_0-AVX2-TBB:
-  #  secrets: inherit
-  #  uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-  #  with:
-  #    image: embree/centos:7.0
-  #    cmd: |
-  #      scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc1.17.0 isa:AVX2 tasking:TBB intensity:3"]
-  #      scripts/test.py build
-  #      scripts/test.py test
-
-  nightly-fedora32-x64-Debug-GCC-ISPC-AVX512-TBB:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
       image: embree/fedora:32
       runs-on: '[ "Linux", "docker", "avx512" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isas:AVX512 tasking:TBB intensity:3
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-distrotest-AVX512 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --target build
+        cmake --build build --target test_package
+ 
 
-  nightly-fedora28-x64-Debug-GCC-ISPC-AVX512-TBB:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:28
-      runs-on: '[ "Linux", "docker", "avx512" ]'
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isas:SSE2-SSE42-AVX-AVX2-AVX512 tasking:TBB intensity:3
-        scripts/test.py build
-        scripts/test.py test
+  # Testing single primiteve types
 
-  nightly-fedora27-x64-Debug-GCC-ISPC-AVX2-TBB:
+  nightly-linux-DEBUG-CLANG4-TRI:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:27
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isa:AVX2 tasking:TBB intensity:3
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-TRI -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-fedora26-x64-Debug-GCC-ISPC-AVX2-TBB:
+  nightly-linux-DEBUG-CLANG4-QUAD:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:26
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isa:AVX2 tasking:TBB intensity:3
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-QUAD -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-fedora25-x64-Debug-GCC-ISPC-AVX2-TBB:
+  nightly-linux-DEBUG-CLANG4-GRID:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:GCC ispc:ispc isa:AVX2 tasking:TBB intensity:3
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-GRID -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-CLANG4-CURVE:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-CURVE -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-CLANG4-SUBDIV:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-SUBDIV -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-CLANG4-USERGEOM:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-USERGEOM -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-CLANG4-INSTANCE:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-INSTANCE -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-Debug-CLANG4-INSTANCE_ARRAY:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-INSTANCE_ARRAY -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
+
+  nightly-linux-DEBUG-CLANG4-INSTANCE-INSTANCE_ARRAY:
+    secrets: inherit
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+    with:
+      image: embree/fedora:29
+      cmd: |
+        module load cmake/3.25.3
+        cmake --preset nightly-singleprimitive-INSTANCE-INSTANCE_ARRAY -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
   # Compilation test of disabled features
-
-  nightly-linux-x64-Debug-CLANG4_0_0-AVX2-TBB2019_9-NO-ISPC:
+  # just building - not running tests for this
+  nightly-linux-feature-NO_ISPC:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 isa:AVX2 tasking:TBB2019.9 intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-NO_ISPC -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-NO-TUTORIALS:
+  nightly-linux-feature-NO_TUTORIALS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TUTORIALS:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-NO_TUTORIALS -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        cmake --build build --target build
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-BACKFACECULLING:
+  nightly-linux-feature-BACKFACECULLING:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 BACKFACE_CULLING:ON intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-BACKFACECULLING -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-IGNORE-INVALID-RAYS:
+  nightly-linux-feature-IGNORE-INVALID-RAYS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 IGNORE_INVALID_RAYS:ON intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-IGNORE-INVALID-RAYS -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-NO-FILTER-FUNCTION:
+  nightly-linux-feature-NO-FILTER-FUNCTION:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 FILTER_FUNCTION:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-NO-FILTER-FUNCTION -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-RAYMASKS:
+  nightly-linux-feature-RAYMASKS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 RAY_MASK:ON intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-RAYMASKS -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-NO-PACKETS:
+  nightly-linux-feature-NO-PACKETS:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 RAY_PACKETS:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-NO-PACKETS -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-STATCOUNTER:
+  nightly-linux-feature-STATCOUNTER:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 STAT_COUNTER:ON intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-feature-STATCOUNTER -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
   # Compilation test of individual ISAs
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-SSE2-TBB2019_9:
+  nightly-linux-individualisa-SSE2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isas:SSE2 tasking:TBB2019.9 intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-individualisa-SSE2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-SSE42-TBB2021_2_0:
+  nightly-linux-individualisa-SSE42:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isas:SSE42 tasking:TBB2021.2.0 intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-individualisa-SSE42 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-AVX-TBB2019_9:
+  nightly-linux-individualisa-AVX:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isas:AVX tasking:TBB2019.9 intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-individualisa-AVX -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-AVX2-TBB2021_2_0:
+  nightly-linux-individualisa-AVX2:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isas:AVX2 tasking:TBB2021.2.0 intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-individualisa-AVX2 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-ISAS-AVX512-TBB2019_9:
+  nightly-linux-individualisa-AVX512:
     secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
+    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
     with:
-      image: embree/fedora:25
+      image: embree/fedora:29
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isas:AVX512 tasking:TBB2019.9 intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  # Compilation test of individual primitive types enabled
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-TRI:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-QUAD:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:OFF QUAD:ON GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-GRID:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:OFF QUAD:OFF GRID:ON CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-CURVE:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:ON QUAD:OFF GRID:OFF CURVE:ON SUBDIV:OFF USERGEOM:OFF INSTANCE:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-SUBDIV:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:ON USERGEOM:OFF INSTANCE:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2019_9-USERGEOM:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2019.9 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:ON INSTANCE:OFF intensity:0
-        scripts/test.py build
-        scripts/test.py test
-
-  nightly-linux-x64-Debug-CLANG4_0_0-ISPC1_17_0-AVX2-TBB2021_2_0-INSTANCE:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/fedora:25
-      cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG4.0.0 ispc:ispc1.17.0 isa:AVX2 tasking:TBB2021.2.0 TRI:ON QUAD:OFF GRID:OFF CURVE:OFF SUBDIV:OFF USERGEOM:OFF INSTANCE:ON intensity:0
-        scripts/test.py build
-        scripts/test.py test
+        module load cmake/3.25.3
+        cmake --preset nightly-linux-individualisa-AVX512 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DEMBREE_TESTING_INTENSITY=1
+        cmake --build build --target build
+        cmake --build build --target test_package
 
 
-  ########################################
-  # Windows
-  ########################################
-  nightly-windows-x64-RelWithDebInfo-V142-ISPC1_13_0-AVX2-TBB2020_2-STATIC:
+
+
+########################################
+# Windows
+########################################
+  nightly-windows-RELEASE-ICX2025_0-ISPC1_13_0-AVX2-TBB2021_5_0:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
     with:
+      dpcpp-version: intel/2025.0
       cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:V142 ispc:ispc1.13.0 isa:AVX2 tasking:TBB2020.2 intensity:2
-        python scripts/test.py build
-        python scripts/test.py test
+        cmake --preset nightly-windows-RELEASE-ICX-ISPC1_13_0-AVX2-TBB2021_5_0 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --config Release --target build
+        cmake --build build --config Release --target test_package
 
-  nightly-windows-x64-RelWithDebInfo-LLVM-CLANG-ISPC1_13_0-AVX2-TBB2019_9-NAMESPACE:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
-    with:
-      cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:LLVM_CLANG ispc:ispc1.13.0 isa:AVX2 tasking:TBB2019.9 intensity:4 api_namespace:myembree
-        python scripts/test.py build
-        python scripts/test.py test
-
-  nightly-windows-x64-RelWithDebInfo-ICX2023_0_0-ISPC1_13_0-AVX2-TBB2021_5_0:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
-    with:
-      cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:ICX2023.0.0 ispc:ispc1.13.0 isa:AVX2 frequency_level:simd128 tasking:TBB2021.5.0 intensity:4
-        python scripts/test.py build
-        python scripts/test.py test
-
-  nightly-windows-x64-RelWithDebInfo-ICX2023_0_0-ISPC1_13_0-AVX512-TBB2019_9:
+  nightly-windows-RELEASE-ICX2025_0-ISPC1_13_0-AVX512-TBB2019_9:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
     with:
       runs-on: '[ "Windows", "NAS", "build", "avx512" ]'
+      dpcpp-version: intel/2025.0
       cmd: |
-        python scripts/test.py configure platform:x64 build:RelWithDebInfo compiler:ICX2023.0.0 ispc:ispc1.13.0 isa:AVX512 tasking:TBB2019.9 intensity:2
-        python scripts/test.py build
-        python scripts/test.py test
+        cmake --preset nightly-windows-RELEASE-ICX-ISPC1_13_0-AVX512-TBB2019_9 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --config Release --target build
+        cmake --build build --config Release --target test_package
 
-  nightly-windows-x64-RelWithDebInfo-ICX2023_0_0-ISPC1_14_1-AVX2-TBB2021_2_0:
+  nightly-windows-RELEASE-ICX2025_0-ISPC1_14_1-AVX2-TBB2021_2_0:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/windows.yml@main
     with:
+      dpcpp-version: intel/2025.0
       cmd: |
-        python scripts/test.py configure platform:x64 build:Release compiler:ICX2023.0.0 ispc:ispc1.14.1 isa:AVX2 tasking:TBB2021.2.0 intensity:2
-        python scripts/test.py build
-        python scripts/test.py test
-
+        cmake --preset nightly-windows-RELEASE-ICX-ISPC1_14_1-AVX2-TBB2021_2_0 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --config Release --target build
+        cmake --build build --config Release --target test_package
 
   ########################################
   # MacOS
   ########################################
 
-  macosx-ARM-NEON:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
-    with:
-      runs-on: '[ "macOS", "arm", "build" ]'
-      cmd: |
-        scripts/test.py configure platform:arm64 build:Debug compiler:CLANG ispc:ispc1.17.0 isa:NEON tasking:TBB_HOMEBREW intensity:2
-        scripts/test.py build
-        scripts/test.py test
+#  nightly-macosx-ARM-NEON:
+#    secrets: inherit
+#    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
+#    with:
+#      runs-on: '[ "macOS", "arm", "build" ]'
+#      cmd: |
+#        cmake --preset nightly-macosx-ARM-NEON -D EMBREE_TESTING_INTENSITY=2
+#        cmake --build build --target package -j8
+#        cd build
+#        ctest -VV
 
-  macosx-x64-ICX:
+  nightly-macosx-x64:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.17.0 isa:SSE2 tasking:TBB2021.7.0 intensity:2
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-x64 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=2
+        cmake --build build --target build
+        cmake --build build --target test_package
 
   # CLANG compilation and testing of different ISAs
 
-  nightly-macosx-x64-Debug-CLANG-ISPC1_12_0-SSE2-TBB2021_1_1-NAMESPACE:
+  nightly-macosx-individualisa-CLANG-SSE2:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG ispc:ispc1.12.0 isa:SSE2 tasking:TBB2021.1.1 intensity:4 api_namespace:myembree maxinstancelevelcount:4
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-individualisa-CLANG-SSE2 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-macosx-x64-Debug-CLANG-ISPC1_13_0-AVX-INT:
+  nightly-macosx-individualisa-CLANG-AVX:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG ispc:ispc1.13.0 isa:AVX tasking:INT intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-individualisa-CLANG-AVX -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-macosx-x64-Debug-CLANG-ISPC1_13_0-SSE2-TBB2021_1_1-STATIC:
+  nightly-macosx-individualisa-CLANG-SSE2-STATIC:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:CLANG ispc:ispc1.13.0 isa:SSE2 tasking:TBB2021.1.1 intensity:4 STATIC_LIB:ON
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-individualisa-CLANG-SSE2-STATIC -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  # ICX compilation and testing of different ISAs
+  # AppleClang compilation and testing of different ISAs
 
-  nightly-macosx-x64-Debug-ICX2023_0_0-ISPC1_13_0-AVX-INT:
+  nightly-macosx-AVX:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.13.0 isa:AVX tasking:INT intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-AVX -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-macosx-x64-Debug-ICX2023_0_0-ISPC1_13_0-AVX2-TBB2021_1_1:
+  nightly-macosx-AVX2-SIMD256:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "avx2", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.13.0 isa:AVX2 frequency_level:simd256 tasking:TBB2021.1.1 intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-AVX2-SIMD256 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  nightly-macosx-x64-Debug-ICX2023_0_0-ISPC1_17_0-AVX2-TBB2021_1_1:
+  nightly-macosx-AVX2:
     secrets: inherit
     uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/macos.yml@main
     with:
       runs-on: '[ "macOS", "avx2", "build", "x86_64" ]'
       cmd: |
-        scripts/test.py configure platform:x64 build:Debug compiler:ICX2023.0.0 ispc:ispc1.17.0 isa:AVX2 frequency_level:simd128 tasking:TBB2021.1.1 intensity:4
-        scripts/test.py build
-        scripts/test.py test
+        cmake --preset nightly-macosx-AVX2 -DCMAKE_BUILD_TYPE=Release -DEMBREE_TESTING_INTENSITY=4
+        cmake --build build --target build
+        cmake --build build --target test_package
 
-  ########################################
-  # ARM EMULATION
-  ########################################
 
-  linux-ubuntu22_04-arm64:
-    secrets: inherit
-    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/embree_docker.yml@main
-    with:
-      image: embree/arm64v8-ubuntu:22.04
-      runs-on: '[ "Linux", "docker-arm", "ARM64" ]'
-      cmd: |
-        python scripts/test.py configure platform:x64 build:Debug compiler:GCC isa:NONE tasking:INT intensity:2
-        python scripts/test.py build
-        python scripts/test.py test
+
+
+
+###  ########################################
+###  # ARM EMULATION
+###  ########################################
+###
+###  nightly-linux-arm-emulation:
+###    secrets: inherit
+###    uses: intel-innersource/libraries.devops.renderkit.workflows/.github/workflows/docker.yml@main
+###    with:
+###      image: embree/arm64v8-ubuntu:22.04
+###      runs-on: '[ "Linux", "docker-arm", "ARM64" ]'
+###      cmd: |
+###        cmake --preset nightly-linux-arm-emulation -D EMBREE_TESTING_INTENSITY=2
+###        cmake --build build --target package -j8
+###        cd build
+###        ctest -VV

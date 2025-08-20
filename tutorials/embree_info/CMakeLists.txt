@@ -1,10 +1,8 @@
 ## Copyright 2009-2021 Intel Corporation
 ## SPDX-License-Identifier: Apache-2.0
 
-IF (NOT EMBREE_ARM)
-
 PROJECT(embree_info)
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
 IF (NOT EMBREE_PROJECT_COMPILATION)
   FIND_PACKAGE(embree REQUIRED)
@@ -15,7 +13,11 @@ IF (EMBREE_SYCL_SUPPORT)
 ENDIF()
 
 ADD_EXECUTABLE(embree_info embree_info.cpp)
-TARGET_LINK_LIBRARIES(embree_info embree)
+IF (EMBREE_SYCL_SUPPORT)
+  TARGET_LINK_LIBRARIES(embree_info embree ze_wrapper ${CMAKE_DL_LIBS})
+ELSE()
+  TARGET_LINK_LIBRARIES(embree_info embree)
+ENDIF()
 
 SET_PROPERTY(TARGET embree_info PROPERTY FOLDER tutorials/single)
 INSTALL(TARGETS embree_info DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT examples)
@@ -31,4 +33,4 @@ IF (COMMAND SIGN_TARGET)
   SIGN_TARGET(embree_info)
 ENDIF()
 
-ENDIF()
+ADD_EMBREE_GENERIC_TEST(embree_info embree_info)

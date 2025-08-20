@@ -13,7 +13,6 @@ namespace embree
   /*! Instanced acceleration structure */
   struct Instance : public Geometry
   {
-    //ALIGNED_STRUCT_(16);
     static const Geometry::GTypeMask geom_type = Geometry::MTY_INSTANCE;
 
   public:
@@ -50,10 +49,13 @@ namespace embree
     virtual void setTransform(const AffineSpace3fa& local2world, unsigned int timeStep) override;
     virtual void setQuaternionDecomposition(const AffineSpace3ff& qd, unsigned int timeStep) override;
     virtual AffineSpace3fa getTransform(float time) override;
+    virtual AffineSpace3fa getTransform(size_t, float time) override;
     virtual void setMask (unsigned mask) override;
     virtual void build() {}
     virtual void addElementsToCount (GeometryCounts & counts) const override;
     virtual void commit() override;
+    virtual size_t getGeometryDataDeviceByteSize() const override;
+    virtual void convertToDeviceRepresentation(size_t offset, char* data_host, char* data_device) const override;
 
   public:
 

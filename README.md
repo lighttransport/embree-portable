@@ -1,4 +1,4 @@
-% Embree: High Performance Ray Tracing Kernels 4.2.0
+% Embree: High Performance Ray Tracing Kernels 4.4.0
 % Intel Corporation
 
 Intel® Embree Overview
@@ -99,8 +99,8 @@ Installation of Embree
 Windows Installation
 --------------------
 
-Embree linked against Visual Studio 2015 are provided as a ZIP file
-[embree-4.2.0.x64.vc14.windows.zip](https://github.com/embree/embree/releases/download/v4.2.0/embree-4.2.0.x64.vc14.windows.zip). After
+A pre-built version of Embree for Windows is provided as a ZIP archive
+[embree-4.4.0.x64.windows.zip](https://github.com/embree/embree/releases/download/v4.4.0/embree-4.4.0.x64.windows.zip). After
 unpacking this ZIP file, you should set the path to the `lib` folder
 manually to your `PATH` environment variable for applications to find
 Embree.
@@ -109,14 +109,14 @@ Embree.
 Linux Installation
 ------------------
 
-The Linux version of Embree is also delivered as a `tar.gz` file:
-[embree-4.2.0.x86_64.linux.tar.gz](https://github.com/embree/embree/releases/download/v4.2.0/embree-4.2.0.x86_64.linux.tar.gz). Unpack
+A pre-built version of Embree for Linux is provided as a `tar.gz` archive:
+[embree-4.4.0.x86_64.linux.tar.gz](https://github.com/embree/embree/releases/download/v4.4.0/embree-4.4.0.x86_64.linux.tar.gz). Unpack
 this file using `tar` and source the provided `embree-vars.sh` (if you
 are using the bash shell) or `embree-vars.csh` (if you are using the C
 shell) to set up the environment properly:
 
-    tar xzf embree-4.2.0.x86_64.linux.tar.gz
-    source embree-4.2.0.x86_64.linux/embree-vars.sh
+    tar xzf embree-4.4.0.x86_64.linux.tar.gz
+    source embree-4.4.0.x86_64.linux/embree-vars.sh
 
 We recommend adding a relative `RPATH` to your application that points
 to the location where Embree (and TBB) can be found, e.g. `$ORIGIN/../lib`.
@@ -126,12 +126,12 @@ macOS Installation
 ------------------
 
 The macOS version of Embree is also delivered as a ZIP file:
-[embree-4.2.0.x86_64.macosx.zip](https://github.com/embree/embree/releases/download/v4.2.0/embree-4.2.0.x86_64.macosx.zip). Unpack
+[embree-4.4.0.x86_64.macosx.zip](https://github.com/embree/embree/releases/download/v4.4.0/embree-4.4.0.x86_64.macosx.zip). Unpack
 this file using `tar` and source the provided `embree-vars.sh` (if you
 are using the bash shell) or `embree-vars.csh` (if you are using the C
 shell) to set up the environment properly:
 
-    unzip embree-4.2.0.x64.macosx.zip    source embree-4.2.0.x64.macosx/embree-vars.sh
+    unzip embree-4.4.0.x64.macosx.zip    source embree-4.4.0.x64.macosx/embree-vars.sh
 
 If you want to ship Embree with your application, please use the Embree
 library of the provided ZIP file. The library name of that Embree
@@ -156,7 +156,7 @@ set the `TBB_DIR` variable to the path containing `TBB-config.cmake` of a local
 TBB install, in case you do not have TBB installed globally on your system,
 e.g:
 
-    cmake -D embree_DIR=path_to_embree_package/lib/cmake/embree-4.2.0/ \
+    cmake -D embree_DIR=path_to_embree_package/lib/cmake/embree-4.4.0/ \
           -D TBB_DIR=path_to_tbb_package/lib/cmake/tbb/ \
           ..
 
@@ -257,7 +257,7 @@ Embree is released with a bundle of tests in an optional testing package.
 To run these tests extract the testing package in the same folder as your embree installation.
 e.g.:
     
-    tar -xzf embree-4.2.0-testing.zip -C /path/to/installed/embree
+    tar -xzf embree-4.4.0-testing.zip -C /path/to/installed/embree
 
 The tests are extracted into a new folder inside you embree installation and can be run with:
 
@@ -285,34 +285,21 @@ C++11. Embree is tested with the following compilers:
 
 Linux
 
-  - Intel® oneAPI DPC++/C++ Compiler 2023.1.0
-  - Intel® oneAPI DPC++/C++ Compiler 2023.0.0
-  - oneAPI DPC++/C++ Compiler 2023-04-17
+  - Intel® oneAPI DPC++/C++ Compiler 2024.0.2
+  - oneAPI DPC++/C++ Compiler 2023-10-26
   - Clang 5.0.0
   - Clang 4.0.0
   - GCC 10.0.1 (Fedora 32) AVX512 support
-  - GCC  8.3.1 (Fedora 28) AVX512 support
-  - GCC  7.3.1 (Fedora 27) AVX2 support
-  - GCC  7.3.1 (Fedora 26) AVX2 support
-  - GCC  6.4.1 (Fedora 25) AVX2 support
-  - Intel® Implicit SPMD Program Compiler 1.19.0
-  - Intel® Implicit SPMD Program Compiler 1.18.1
-  - Intel® Implicit SPMD Program Compiler 1.17.0
-  - Intel® Implicit SPMD Program Compiler 1.16.1
-  - Intel® Implicit SPMD Program Compiler 1.15.0
-  - Intel® Implicit SPMD Program Compiler 1.14.1
-  - Intel® Implicit SPMD Program Compiler 1.13.0
-  - Intel® Implicit SPMD Program Compiler 1.12.0
-  
-macOS x86
+  - GCC  8.3.1 (Fedora 29) AVX512 support
+  - Intel® Implicit SPMD Program Compiler 1.22.0
 
-  - Intel® C++ Classic Compiler 2023.1.0
-  - Intel® C++ Classic Compiler 2023.0.0
-  - Apple Clang 12.0.5 (macOS 11.7.1)
+macOS x86_64
 
-macOS M1
+  - Apple Clang 15
 
-  - Apple Clang 12.0.5 (macOS 11.7.1)
+macOS Arm64
+
+  - Apple Clang 14
 
 Embree supports using the Intel® Threading Building Blocks (TBB) as the
 tasking system. For performance and flexibility reasons we recommend
@@ -335,7 +322,7 @@ version of [GLFW](https://www.glfw.org/) version 3.
 Under macOS, all these dependencies can be installed
 using [MacPorts](http://www.macports.org/):
 
-    sudo port install cmake tbb-devel glfw-devel
+    sudo port install cmake tbb glfw-devel
 
 Depending on your Linux distribution you can install these dependencies
 using `yum` or `apt-get`.  Some of these packages might already be
@@ -412,18 +399,21 @@ The "oneAPI DPC++ Compiler" is more up-to-date than the "Intel(R) oneAPI
 DPC++/C++ Compiler" but less stable. The current tested version of the "oneAPI
 DPC++ compiler is
 
-  - [oneAPI DPC++ Compiler 2023-04-17](https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230417/dpcpp-compiler.tar.gz)
+  - [oneAPI DPC++ Compiler 2023-10-26](https://github.com/intel/llvm/releases/tag/nightly-2023-10-26)
   
 The compiler can be downloaded and simply extracted. The oneAPI DPC++ compiler
-2022-12-14 can be set up executing the following command in a Linux (bash)
-shell:
+can be set up executing the following commands in a Linux (bash) shell:
 
-    wget https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230417/dpcpp-compiler.tar.gz
-    tar xzf dpcpp-compiler.tar.gz
-    source ./dpcpp_compiler/startup.sh
+    export SYCL_BUNDLE_ROOT=path_to_dpcpp_compiler
+    export PATH=$SYCL_BUNDLE_ROOT/bin:$PATH
+    export CPATH=$SYCL_BUNDLE_ROOT/include:$CPATH
+    export LIBRARY_PATH=$SYCL_BUNDLE_ROOT/lib:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=$SYCL_BUNDLE_ROOT/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=$SYCL_BUNDLE_ROOT/linux/lib/x64:$LD_LIBRARY_PATH
 
-The `startup.sh` script will put `clang++` and `clang` from the
-oneAPI DPC++ Compiler into your path.
+where the `path_to_dpcpp_compiler` should point to the unpacked oneAPI DPC++
+compiler. This will put `clang++` and `clang` from the oneAPI DPC++ Compiler
+into your path.
 
 Please also install all Linux packages described in the previous
 section.
@@ -442,12 +432,12 @@ through `EMBREE_SYCL_SUPPORT=ON`.
 
 Alternatively, you can download and run the installer of the
 
- - [Intel(R) oneAPI DPC++/C++ Compiler 2023.1.0](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
+ - [Intel(R) oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
 
 After installation, you can set up the compiler by sourcing the
 `vars.sh` script in the `env` directory of the compiler install directory, for example,
 
-    source /opt/intel/oneAPI/compiler/2023.0.0/env/vars.sh
+    source /opt/intel/oneAPI/compiler/latest/env/vars.sh
 
 This script will put the `icpx` and `icx` compiler executables from the
 Intel(R) oneAPI DPC++/C++ Compiler in your path.
@@ -481,37 +471,23 @@ your Intel Xe HPG/HPC GPUs from here
 the driver installation instructions for your graphics card and
 operating system.
 
-We tested Embree with the latest GPGPU driver Devel Release from
-20220809. The Intel(R) Graphics Compute Runtime for oneAPI Level Zero
-and OpenCL(TM) Driver from that release is too old for Embree to work
-properly. Thus if no newer version of the GPGPU driver is available,
-you need to additionally install the latest compute runtime from here
-[23.09.25812.14](https://github.com/intel/compute-runtime/releases/tag/23.09.25812.14).
+After installing the drivers you have to install an additional package
+manually using
 
-Unfortunately, these compute runtime packages are only available for
-Ubuntu 22.04. You can also install a newer version of the compute
-runtime if available.
+    sudo apt install intel-level-zero-gpu-raytracing
 
 
 Windows
 -------
-        
+
 Embree is tested using the following compilers under Windows:
 
-  - Intel® oneAPI DPC++/C++ Compiler 2023.1.0
-  - Intel® oneAPI DPC++/C++ Compiler 2023.0.0
-  - oneAPI DPC++/C++ Compiler 2023-04-17
+  - Intel® oneAPI DPC++/C++ Compiler 2024.0.2
+  - oneAPI DPC++/C++ Compiler 2023-10-26
+  - Visual Studio 2022
   - Visual Studio 2019
   - Visual Studio 2017
-  - Intel® Implicit SPMD Program Compiler 1.19.0
-  - Intel® Implicit SPMD Program Compiler 1.18.1
-  - Intel® Implicit SPMD Program Compiler 1.17.0
-  - Intel® Implicit SPMD Program Compiler 1.16.1
-  - Intel® Implicit SPMD Program Compiler 1.15.0
-  - Intel® Implicit SPMD Program Compiler 1.14.1
-  - Intel® Implicit SPMD Program Compiler 1.13.0
-  - Intel® Implicit SPMD Program Compiler 1.12.0
-    
+  - Intel® Implicit SPMD Program Compiler 1.22.0
 
 To compile Embree for AVX-512 you have to use the Intel® Compiler.
 
@@ -628,7 +604,7 @@ The "oneAPI DPC++ Compiler" is more up-to-date than the "Intel(R) oneAPI
 DPC++/C++ Compiler" but less stable. The current tested version of the oneAPI
 DPC++ compiler is
 
-  - [oneAPI DPC++ Compiler 2023-04-17](https://github.com/intel/llvm/releases/download/sycl-nightly%2F20230417/dpcpp-compiler-win.tar.gz)
+  - [oneAPI DPC++ Compiler 2023-10-26](https://github.com/intel/llvm/releases/tag/nightly-2023-10-26)
 
 Download and unpack the archive and open the "x64 Native Tools Command Prompt"
 of Visual Studio and execute the following lines to properly configure the
@@ -667,13 +643,13 @@ option.
 
 Alternatively, you can download and run the installer of the
 
- - [Intel(R) oneAPI DPC++/C++ Compiler 2023.0.0](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
+ - [Intel(R) oneAPI DPC++/C++ Compiler](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp).
 
 After installation, you can either open a regular `Command Prompt` and execute
 the `vars.bat` script in the `env` directory of the compiler install directory,
 for example
 
-    C:\Program Files (x86)\Intel\oneAPI\compiler\2023.0.0\env\vars.bat
+    C:\Program Files (x86)\Intel\oneAPI\compiler\latest\env\vars.bat
 
 or simply open the installed "Intel oneAPI command prompt for Intel 64 for Visual Studio".
 
@@ -716,7 +692,7 @@ your application with such an Embree package.
 In order to run the SYCL tutorials on HPG hardware, you first need to
 install the graphics drivers for your graphics card from
 [https://www.intel.com](https://www.intel.com). Please make sure to
-have installed version 31.0.101.4314 or newer.
+have installed version 31.0.101.4644 or newer.
 
 
 CMake Configuration
@@ -870,6 +846,9 @@ parameters that can be configured in CMake:
 + `EMBREE_GEOMETRY_INSTANCE`: Enables support for instances (ON by
   default).
 
++ `EMBREE_GEOMETRY_INSTANCE_ARRAY`: Enables support for instance arrays (ON by
+  default).
+
 + `EMBREE_GEOMETRY_USER`: Enables support for user-defined geometries
   (ON by default).
 
@@ -900,8 +879,7 @@ parameters that can be configured in CMake:
 
 
 
-Embree API
-==========
+# Embree API
 
 The Embree API is a low-level C99 ray tracing API which can be used to
 build spatial index structures for 3D scenes and perform ray queries of
@@ -947,8 +925,17 @@ access the same object are not thread-safe, unless specified otherwise.
 However, attaching geometries to the same scene and performing ray
 queries in a scene is thread-safe.
 
-Device Object
--------------
+Starting with Embree 4.4 intersection and occlusion queries on a SYCL
+device require the use of the `rtcTraversableIntersect`-type functions
+or the `rtcTraversableOccluded`-type function respectively. These
+functions take a traversable object (`RTCTraversable` type) which
+corresponds to a `RTCScene`. Traversable objects are not reference
+counted and therefore they do not have to be released like the other
+handles. Traversable objects grant read-only access to a scene object
+on a SYCL device and are valid as long as the corresponding scene
+object is valid.
+
+## Device Object
 
 Embree supports a device concept, which allows different components of
 the application to use the Embree API without interfering with each
@@ -968,8 +955,7 @@ Section [rtcSetDeviceErrorFunction] on how to register a callback
 that is invoked for each error encountered. It is recommended to always
 set a error callback function, to detect all errors.
 
-Scene Object
-------------
+## Scene Object
 
 A scene is a container for a set of geometries, and contains a spatial
 acceleration structure which can be used to perform different types of
@@ -994,6 +980,17 @@ time. Any API call that sets a property of the scene or geometries
 contained in the scene count as scene modification, e.g. including
 setting of intersection filter functions.
 
+When using SYCL, calls to `rtcCommitScene` trigger memory transfers
+from the host (CPU) to the device (GPU). Calling `rtcCommitScene` will
+be blocking and return only after the memory transfers are completed.
+Embree also provides the function `rtcCommitSceneWithQueue` which takes
+a SYCL queue as argument to which the memory transfer operations are
+submitted. Calling `rtcCommitSceneWithQueue` will trigger the memory
+transfers asynchronously and the application is responsible for
+sychronizing command on the queue properly to ensure the scene data is
+available on a SYCL device when a SYCL kernels performs intersection
+queries that rely on the scene data.
+
 Scene flags can be used to configure a scene to use less memory
 (`RTC_SCENE_FLAG_COMPACT`), use more robust traversal algorithms
 (`RTC_SCENE_FLAG_ROBUST`), and to optimize for dynamic content. See
@@ -1003,8 +1000,26 @@ A build quality can be specified for a scene to balance between
 acceleration structure build performance and ray query performance. See
 Section [rtcSetSceneBuildQuality] for more details on build quality.
 
-Geometry Object
----------------
+## Traversable Object
+
+Starting with Embree 4.4 scene objects (`RTCScene` types) are not valid
+handles on SYCL devices anymore and therefore can not be used for
+Embree API calls in a SYCL kernel. Instead, Embree API calls on a SYCL
+kernel have a variation which use traversable objects (`RTCTraversable`
+type).
+
+Traversable objects grant read-only access to a scene object on a SYCL
+device and are valid as long as the corresponding scene object is
+valid. They can be queried from a scene object using the
+`rtcGetSceneTraversable` function and used in
+`rtcTraversableIntersect`-type functions or the
+`rtcTraversableOccluded`-type function. They can also be used in CPU
+code and Embree provides other API calls such as the
+`rtcTraversablePointQuery` (which are not currently implemented for
+SYCL) to help write portable code compatible with CPU and SYCL device
+execution.
+
+## Geometry Object
 
 A new geometry is created using the `rtcNewGeometry` function.
 Depending on the geometry type, different buffers must be bound (e.g.
@@ -1036,8 +1051,7 @@ be set using the `rtcSetGeometryTimeRange` function. This feature will
 also allow geometries to appear and disappear during the camera shutter
 time if the time range is a sub range of [0,1].
 
-Ray Queries
------------
+## Ray Queries
 
 The API supports finding the closest hit of a ray segment with the
 scene (`rtcIntersect`-type functions), and determining whether any hit
@@ -1056,8 +1070,10 @@ description of how to set up and trace a ray.
 See tutorial [Triangle Geometry] for a complete example of how to
 trace single rays and ray packets.
 
-Point Queries
--------------
+On SYCL devices the API functions `rtcTraversableIntersect` and
+`rtcTraversableOccluded` have to be used.
+
+## Point Queries
 
 The API supports traversal of the BVH using a point query object that
 specifies a location and a query radius. For all primitives
@@ -1066,16 +1082,19 @@ called which allows queries such as finding the closest point on the
 surface geometries of the scene (see Tutorial [Closest Point]) or
 nearest neighbour queries (see Tutorial [Voronoi]).
 
+Point Queries can currently not be used on SYCL devices.
+
 See Section [rtcPointQuery] for a detailed description of how to set
 up point queries.
 
-Collision Detection
--------------------
+## Collision Detection
 
 The Embree API also supports collision detection queries between two
 scenes consisting only of user geometries. Embree only performs
 broadphase collision detection, the narrow phase detection can be
 performed through a callback function.
+
+Collision detection can currently not be used on SYCL devices.
 
 See Section [rtcCollide] for a detailed description of how to set up
 collision detection.
@@ -1084,8 +1103,7 @@ Seen tutorial [Collision Detection](#collision-detection) for a
 complete example of collision detection being used on a simple cloth
 solver.
 
-Filter Functions
-----------------
+## Filter Functions
 
 The API supports filter functions that are invoked for each
 intersection found during the `rtcIntersect`-type or `rtcOccluded`-type
@@ -1112,16 +1130,14 @@ is only invoked for geometries that enable the callback using the
 all geometries when the `RTC_RAY_QUERY_FLAG_INVOKE_ARGUMENT_FILTER` ray
 query flag is set.
 
-BVH Build API
--------------
+## BVH Build API
 
 The internal algorithms to build a BVH are exposed through the `RTCBVH`
 object and `rtcBuildBVH` call. This call makes it possible to build a
 BVH in a user-specified format over user-specified primitives. See the
 documentation of the `rtcBuildBVH` call for more details.
 
-Embree SYCL API
-===============
+# Embree SYCL API
 
 Embree supports ray tracing on Intel GPUs by using the SYCL programming
 language. SYCL is a Khronos standardized C++ based language for single
@@ -1161,6 +1177,13 @@ with such a device. To render on the CPU and GPU in parallel, the user
 has to create a second Embree device and create a second scene to be
 used on the CPU.
 
+Starting with Embree 4.4 scene objects (`RTCScene` types) are not valid
+handles on SYCL devices anymore and therefore can not be used for
+Embree API calls in a SYCL kernel. Instead, Embree API calls on a SYCL
+kernel have a variation which use traversable objects (`RTCTraversable`
+type). To get a traversable object for a scene object the application
+can call `rtcGetSceneTraversable`.
+
 Files containing SYCL code, have to get compiled with the Intel® oneAPI
 DPC++ compiler. Please see section [Linux SYCL Compilation] and
 [Windows SYCL Compilation] for supported compilers. The DPC++
@@ -1169,18 +1192,30 @@ in a first phase, and device code compiled in a second compilation
 phase.
 
 Standard Embree API functions for scene construction can get used on
-the host but not the device. Data buffers that are shared with Embree
-(e.g. for vertex of index buffers) have to get allocated as SYCL
-unified shared memory (USM memory), using the `sycl::malloc` or
-`sycl::aligned_alloc` calls with `sycl::usm::alloc::shared` property,
-or the sycl::aligned\_alloc\_shared call, e.g:
+the host but not the device.
+
+Before version 4.4, Embree made heavy use of unified shared memory
+(USM) shared memory which simplifies memory management with SYCL
+devices by letting the SYCL runtime transfer data from host to device
+implicitly. However, some applications require more control over when
+and how data is migrated from CPU to GPU. Embree 4.4 allows to use
+explicit host and device memory allocations. See for example
+`rtcSetNewGeometryBufferHostDevice`,
+`rtcSetSharedGeometryBufferHostDevice`, `rtcNewBufferHostDevice`, and
+`rtcNewSharedBufferHostDevice`. It is still possible to share data
+buffers with Embree using SYCL USM shared memory by using the API calls
+without the `HostDevice` suffix.
+
+The easiest way to share data buffers with Embree (e.g. for vertex of
+index buffers) is to allocate the data as USM shared memory, using the
+`sycl::malloc` or `sycl::aligned_alloc` calls with
+`sycl::usm::alloc::shared` property, or the sycl::aligned_alloc_shared
+call, e.g:
 
     void* ptr = sycl::aligned_alloc(16, bytes, queue, sycl::usm::alloc::shared);
 
 These shared allocations have to be valid during rendering, as Embree
-may access contained data when tracing rays. Embree does not support
-device-only memory allocations, as the BVH builder implemented on the
-CPU relies on reading the data buffers.
+may access contained data when tracing rays.
 
 Device side rendering can get invoked by submitting a SYCL
 `parallel_for` to the SYCL queue:
@@ -1188,6 +1223,8 @@ Device side rendering can get invoked by submitting a SYCL
     const sycl::specialization_id<RTCFeatureFlags> feature_mask;
 
     RTCFeatureFlags required_features = RTC_FEATURE_FLAG_TRIANGLE;
+
+    RTCTraversable traversable = rtcGetSceneTraversable(scene);
 
     queue.submit([=](sycl::handler& cgh)
     {
@@ -1215,7 +1252,7 @@ Device side rendering can get invoked by submitting a SYCL
         rayhit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
         rayhit.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
 
-        rtcIntersect1(scene, &rayhit, &args);
+        rtcTraversableIntersect1(traversable, &rayhit, &args);
 
         result->geomID = rayhit.hit.geomID;
         result->primID = rayhit.hit.primID;
@@ -1224,23 +1261,27 @@ Device side rendering can get invoked by submitting a SYCL
     });
     queue.wait_and_throw();
 
-This example passes a feature mask using a specialization contant to
-the `rtcIntersect1` function, which is recommended for GPU rendering.
-For best performance, this feature mask should get used to enable only
-features required by the application to render the scene, e.g. just
-triangles in this example.
+This example passes a feature mask using a specialization constant to
+the `rtcTraversableIntersect1` function, which is recommended for GPU
+rendering. For best performance, this feature mask should get used to
+enable only features required by the application to render the scene,
+e.g. just triangles in this example.
 
 Inside the SYCL `parallel_for` loop you can use rendering related
-functions, such as the `rtcIntersect1` and `rtcOccluded1` functions to
-trace rays, `rtcForwardIntersect1` and `rtcForwardOccluded1` to
-continue object traversal from inside a user geometry callback, and
-`rtcGetGeometryUserDataFromScene` to get the user data pointer of some
-geometry.
+functions, such as the `rtcTraversableIntersect1` and
+`rtcTraversableOccluded1` functions to trace rays,
+`rtcTraversableForwardIntersect1/Ex` and
+`rtcTraversableForwardOccluded1/Ex` to continue object traversal from
+inside a user geometry callback, and
+`rtcGetGeometryUserDataFromTraversable` to get the user data pointer of
+some geometry.
 
-Have a look at the [Minimal] tutorial for a minimal SYCL example.
+Have a look at the [Minimal] tutorial for a minimal SYCL example and
+the [Host Device Memory] tutorial shows four different ways in which
+data buffers can be created by or shared with Embree using explicit
+host/device data buffers.
 
-SYCL JIT caching
-----------------
+## SYCL JIT caching
 
 Compile times for just in time compilation (JIT compilation) can be
 large. To resolve this issue we recommend enabling persistent JIT
@@ -1256,8 +1297,7 @@ get set before the SYCL device is created, e.g:
     sycl::device device(rtcSYCLDeviceSelector);
     ...
 
-SYCL Memory Pooling
--------------------
+## SYCL Memory Pooling
 
 Memory Pooling is a mechanism where small USM memory allocations are
 packed into larger allocation blocks. This mode is required when your
@@ -1272,8 +1312,7 @@ with memory pooling support:
     sycl::aligned_alloc_shared(align, bytes, queue,
       sycl::ext::oneapi::property::usm::device_read_only());
 
-Embree SYCL Limitations
------------------------
+## Embree SYCL Limitations
 
 Embree only supports Xe HPC and HPG GPUs as SYCL devices, thus in
 particular the CPU and other GPUs cannot get used as a SYCL device. To
@@ -1281,7 +1320,7 @@ render on the CPU just use the standard C99 API without relying on
 SYCL.
 
 The SYCL language spec puts some restrictions to device functions, such
-as disallowing: global variable access, malloc, invokation of virtual
+as disallowing: global variable access, malloc, invocation of virtual
 functions, function pointers, runtime type information, exceptions,
 recursion, etc. See Section
 `5.4. Language Restrictions for device functions` of the [SYCL
@@ -1295,10 +1334,16 @@ reasons.
 Some features are not supported by the Embree SYCL API thus cannot get
 used on the GPU:
 
--   The packet tracing functions `rtcIntersect4/8/16` and
-    `rtcOccluded4/8/16` are not supported in SYCL device side code.
-    Using these functions makes no sense for SYCL, as the programming
-    model is implicitely executed in SIMT mode on the GPU anyway.
+-   Since Embree 4.4, all the ray query functions that take an
+    `RTCScene` object as argument cannot get used in SYCL device side
+    code. Instead, the API functions taking a `RTCTraversable` object
+    (e.g. `rtcTraversableIntersect1`) have to be used.
+
+-   The packet tracing functions `rtcTraversableIntersect4/8/16` and
+    `rtcTraversableOccluded4/8/16` are not supported in SYCL device
+    side code. Using these functions makes no sense for SYCL, as the
+    programming model is implicitly executed in SIMT mode on the GPU
+    anyway.
 
 -   Filter and user geometry callbacks stored inside the geometry
     objects are not supported on SYCL. Please use the alternative
@@ -1314,10 +1359,11 @@ used on the GPU:
     interpolating over, thus its implementation on the GPU would
     contain a large switch statement for all potential geometry types.
 
--   Tracing rays using `rtcIntersect1` and `rtcOccluded1` functions
-    from user geometry callbacks is not supported in SYCL. Please use
-    the tail recursive `rtcForwardIntersect1` and `rtcForwardOccluded1`
-    calls instead.
+-   Tracing rays using `rtcTraversableIntersect1` and
+    `rtcTraversableOccluded1` functions from user geometry callbacks is
+    not supported in SYCL. Please use the tail recursive
+    `rtcTraversableForwardIntersect1` and
+    `rtcTraversableForwardOccluded1` calls instead.
 
 -   Subdivision surfaces are not supported for Embree SYCL devices.
 
@@ -1327,18 +1373,12 @@ used on the GPU:
 -   Point queries (`rtcPointQuery` API call) are not supported in SYCL
     device side code.
 
-Embree SYCL Known Issues
-------------------------
-
--   The SYCL support of Embree is in beta phase. Current functionality,
-    quality, and GPU performance may not reflect that of the final
-    product.
+## Embree SYCL Known Issues
 
 -   Compilation with build configuration "debug" is currently not
-    working on Windows.
+    feasible because compilation times are very long.
 
-Upgrading from Embree 3 to Embree 4
-===================================
+# Upgrading from Embree 3 to Embree 4
 
 This section summarizes API changes between Embree 3 and Embree4. Most
 of these changes are motivated by GPU performance and having a
@@ -1412,22 +1452,27 @@ required:
     an instantiated object. In Embree 4 using `rtcIntersect`
     recursively is disallowed on the GPU but still supported on the
     CPU. To properly continue a ray inside an instantiated object use
-    the new `rtcForwardIntersect1` and `rtcForwardOccluded1` functions.
+    the new `rtc(Traversable)ForwardIntersect1` and
+    `rtc(Traversable)ForwardOccluded1` functions.
 
--   The geometry object of Embree 4 is a host side only object, thus
-    accessing it during rendering from the GPU is not allowed. Thus all
-    API functions that take an RTCGeometry object as argument cannot
-    get used during rendering. Thus in particular the
-    `rtcGetGeometryUserData(RTCGeometry)` call cannot get used, but
-    there is an alternative function
-    `rtcGetGeometryUserDataFromScene(RTCScene scene,uint geomID)` that
-    should get used instead.
+-   The geometry object and scene object of Embree 4 are a host side
+    only objects, thus accessing it during rendering from the GPU is
+    not allowed. Thus all API functions that take an RTCGeometry object
+    or RTCScene object as argument cannot get used during rendering. In
+    particular the `rtcGetGeometryUserData(RTCGeometry)` call cannot
+    get used, but there is an alternative function
+    `rtcGetGeometryUserDataFromTraversable(RTCTraversable traversable,uint geomID)`
+    that should get used instead. To perform ray queries on the GPU
+    (e.g. `rtcTraversableIntersect1`) the application has to get a
+    `RTCTraversable` object first (using `rtcGetSceneTraversable`) and
+    pass it to the SYCL kernel.
 
 -   The user geometry callback and filter callback functions should get
     passed through the intersection and occlusion argument structures
-    to the `rtcIntersect1` and `rtcOccluded1` functions directly to
-    allow inlining. The experimental geometry version of the callbacks
-    is disabled in SYCL and should not get used.
+    to the `rtcTraversableIntersect1` and `rtcTraversableOccluded1`
+    functions directly to allow inlining. The experimental geometry
+    version of the callbacks is disabled in SYCL and should not get
+    used.
 
 -   The feature flags should get used in SYCL to minimal GPU code for
     optimal performance.
@@ -1443,11 +1488,9 @@ required:
 ```{=tex}
 
 ```
-Embree API Reference
-====================
+# Embree API Reference
 
-rtcNewDevice
-------------
+## rtcNewDevice
 
 #### NAME
 
@@ -1488,9 +1531,9 @@ The following configuration is supported:
 -   `user_threads=[int]`: Sets the number of user threads that can be
     used to join and participate in a scene commit using
     `rtcJoinCommitScene`. The tasking system will only use
-    threads-user\_threads many worker threads, thus if the app wants to
+    threads-user_threads many worker threads, thus if the app wants to
     solely use its threads to commit scenes, just set threads equal to
-    user\_threads. This option only has effect with the Intel(R)
+    user_threads. This option only has effect with the Intel(R)
     Threading Building Blocks (TBB) tasking system.
 
 -   `set_affinity=[0/1]`: When enabled, build threads are affinitized
@@ -1532,7 +1575,7 @@ The following configuration is supported:
         frequency level is specified, Embree will avoid doing
         optimizations that may reduce the frequency level below the
         level specified. E.g. if your app does not use AVX instructions
-        setting "frequency\_level=simd128" will cause some CPUs to run
+        setting "frequency_level=simd128" will cause some CPUs to run
         at highest frequency, which may result in higher application
         performance if you do much shading. If you application heavily
         uses AVX code, you should best set the frequency level to
@@ -1557,8 +1600,7 @@ using `rtcGetDeviceError(NULL)`.
 ```{=tex}
 
 ```
-rtcNewSYCLDevice
-----------------
+## rtcNewSYCLDevice
 
 #### NAME {#name}
 
@@ -1608,8 +1650,7 @@ using `rtcGetDeviceError(NULL)`.
 ```{=tex}
 
 ```
-rtcIsSYCLDeviceSupported
-------------------------
+## rtcIsSYCLDeviceSupported
 
 #### NAME {#name}
 
@@ -1639,8 +1680,7 @@ using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-rtcSYCLDeviceSelector
----------------------
+## rtcSYCLDeviceSelector
 
 #### NAME {#name}
 
@@ -1680,8 +1720,7 @@ otherwise. On failure an error code is set that can get queried using
 ```{=tex}
 
 ```
-rtcSetDeviceSYCLDevice
-----------------------
+## rtcSetDeviceSYCLDevice
 
 #### NAME {#name}
 
@@ -1712,8 +1751,7 @@ On failure an error code is set that can get queried using
 ```{=tex}
 
 ```
-rtcRetainDevice
----------------
+## rtcRetainDevice
 
 #### NAME {#name}
 
@@ -1745,8 +1783,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcReleaseDevice
-----------------
+## rtcReleaseDevice
 
 #### NAME {#name}
 
@@ -1781,8 +1818,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetDeviceProperty
---------------------
+## rtcGetDeviceProperty
 
 #### NAME {#name}
 
@@ -1920,8 +1956,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-rtcGetDeviceError
------------------
+## rtcGetDeviceError
 
 #### NAME {#name}
 
@@ -1962,11 +1997,27 @@ Possible error codes returned by `rtcGetDeviceError` are:
 -   `RTC_ERROR_CANCELLED`: The operation got canceled by a memory
     monitor callback or progress monitor callback function.
 
+-   `RTC_ERROR_LEVEL_ZERO_RAYTRACING_SUPPORT_MISSING`: This error can
+    occur when creating an Embree device with SYCL support using
+    `rtcNewSYCLDevice` fails. This error probably means that the GPU
+    driver is to old or not installed properly. Install a new GPU
+    driver and on Linux make sure that the package
+    `intel-level-zero-gpu-raytracing` is installed. For general driver
+    installation information for Linux refer to
+    <https://dgpu-docs.intel.com>.
+
 When the device construction fails, `rtcNewDevice` returns `NULL` as
 device. To detect the error code of a such a failed device
 construction, pass `NULL` as device to the `rtcGetDeviceError`
 function. For all other invocations of `rtcGetDeviceError`, a proper
 device pointer must be specified.
+
+The API function `rtcGetDeviceLastErrorMessage` can be used to get more
+details about the last `RTCError` a `RTCDevice` encountered.
+
+For convenient reporting of a `RTCError`, the API function
+`rtcGetErrorString` can be used, which returns a string representation
+of a given `RTCError`.
 
 #### EXIT STATUS {#exit-status}
 
@@ -1974,13 +2025,88 @@ Returns the error code for the device.
 
 #### SEE ALSO {#see-also}
 
-[rtcSetDeviceErrorFunction]
+[rtcSetDeviceErrorFunction], [rtcGetDeviceLastErrorMessage],
+[rtcGetErrorString]
 
 ```{=tex}
 
 ```
-rtcSetDeviceErrorFunction
--------------------------
+## rtcGetDeviceLastErrorMessage
+
+#### NAME {#name}
+
+    rtcGetDeviceLastErrorMessage - returns a message corresponding
+      to the last error code
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    const char* rtcGetDeviceLastErrorMessage(RTCDevice device);
+
+#### DESCRIPTION {#description}
+
+This function can be used to get a message corresponding to the last
+error code (returned by `rtcGetDeviceError`) which often provides
+details about the error that happened. The message is the same as the
+message that will written to console when verbosity is \> 0 or which is
+passed as the `str` argument of the `RTCErrorFunction` (see
+[rtcSetDeviceErrorFunction]). However, when device construction fails
+this is the only way to get additional information about the error. In
+this case, `rtcNewDevice` returns `NULL` as device. To query the error
+message for such a failed device construction, pass `NULL` as device to
+the `rtcGetDeviceLastErrorMessage` function. For all other invocations
+of `rtcGetDeviceLastErrorMessage`, a proper device pointer must be
+specified.
+
+#### EXIT STATUS {#exit-status}
+
+Returns a message corresponding to the last error code.
+
+#### SEE ALSO {#see-also}
+
+[rtcGetDeviceError], [rtcSetDeviceErrorFunction]
+
+```{=tex}
+
+```
+## rtcGetErrorString
+
+#### NAME {#name}
+
+    rtcGetErrorString - returns a string representation
+      of a given RTCError
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    const char* rtcGetErrorString(RTCError code);
+
+#### DESCRIPTION {#description}
+
+Returns a string representation for a `RTCError` error code. For
+example, for the `RTCError` RTC_ERROR_UNKNOWN this function will return
+the string "Unknown Error". This is purely a convenience function for
+printing error information on the user side.
+
+The returned strings should not be used for comparing different
+`RTCError` error codes or make other decisions based on the type of
+error that occurred. For such things only the `RTCError` enum values
+should be used.
+
+#### EXIT STATUS {#exit-status}
+
+Returns a string representation of a given `RTCError` error code.
+
+#### SEE ALSO {#see-also}
+
+[rtcGetDeviceError]
+
+```{=tex}
+
+```
+## rtcSetDeviceErrorFunction
 
 #### NAME {#name}
 
@@ -2033,8 +2159,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetDeviceMemoryMonitorFunction
----------------------------------
+## rtcSetDeviceMemoryMonitorFunction
 
 #### NAME {#name}
 
@@ -2112,8 +2237,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcNewScene
------------
+## rtcNewScene
 
 #### NAME {#name}
 
@@ -2144,8 +2268,7 @@ and an error code is set that can be queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-rtcGetSceneDevice
------------------
+## rtcGetSceneDevice
 
 #### NAME {#name}
 
@@ -2176,8 +2299,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcRetainScene
---------------
+## rtcRetainScene
 
 #### NAME {#name}
 
@@ -2209,8 +2331,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcReleaseScene
----------------
+## rtcReleaseScene
 
 #### NAME {#name}
 
@@ -2245,8 +2366,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcAttachGeometry
------------------
+## rtcAttachGeometry
 
 #### NAME {#name}
 
@@ -2297,8 +2417,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcAttachGeometryByID
----------------------
+## rtcAttachGeometryByID
 
 #### NAME {#name}
 
@@ -2348,8 +2467,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcDetachGeometry
------------------
+## rtcDetachGeometry
 
 #### NAME {#name}
 
@@ -2382,8 +2500,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometry
---------------
+## rtcGetGeometry
 
 #### NAME {#name}
 
@@ -2425,8 +2542,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-rtcGetGeometryThreadSafe
-------------------------
+## rtcGetGeometryThreadSafe
 
 #### NAME {#name}
 
@@ -2464,8 +2580,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-rtcCommitScene
---------------
+## rtcCommitScene
 
 #### NAME {#name}
 
@@ -2490,9 +2605,9 @@ of rendering, lazy scene construction during rendering is supported by
 `rtcCommitScene`. Therefore `rtcCommitScene` can get called from
 multiple TBB worker threads concurrently for the same scene. The
 `rtcCommitScene` function will then internally isolate the scene
-construction using a tbb::isolated\_task\_group. The alternative
-approach of using `rtcJoinCommitScene` which uses an tbb:task\_arena
-internally, is not recommended due to it's high runtime overhead.
+construction using a tbb::isolated_task_group. The alternative approach
+of using `rtcJoinCommitScene` which uses an tbb:task_arena internally,
+is not recommended due to it's high runtime overhead.
 
 If scene geometries get modified or attached or detached, the
 `rtcCommitScene` call must be invoked before performing any further ray
@@ -2513,6 +2628,18 @@ e.g. primitives containing NaNs, INFs, or values greater than 1.844E18f
 (as no reasonable calculations can be performed with such values
 without causing overflows).
 
+In case the RTCDevice associated with the `scene` is a SYCL device,
+`rtcCommitScene` will internally create a temporary SYCL queue to issue
+memory transfers from host to device memory. In this case, the call to
+`rtcCommitScene` will be blocking and return only after the memory
+transfers are completed and SYCL kernels can traverse the scene savely
+on the device. The function `rtcCommitSceneWithQueue` can be used to
+commit all changes for the specified scene asynchronously. Handles to
+traversal objects (`RTCTraversable` type) that have been aquired before
+a call to `rtcCommitScene` will be invalidated. Use
+`rtcGetSceneTraversable` to get a valid handle from the scene after
+every scene commit.
+
 #### EXIT STATUS {#exit-status}
 
 On failure an error code is set that can be queried using
@@ -2520,13 +2647,69 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[rtcJoinCommitScene]
+[rtcCommitSceneWithQueue], [rtcJoinCommitScene]
 
 ```{=tex}
 
 ```
-rtcJoinCommitScene
-------------------
+## rtcCommitSceneWithQueue
+
+#### NAME {#name}
+
+    rtcCommitSceneWithQueue - commits scene changes using a given
+      SYCL queue for host-to-device memory transfers
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcCommitScene(RTCScene scene,
+      sycl::queue queue,
+      sycl::event* event);
+
+#### DESCRIPTION {#description}
+
+The `rtcCommitSceneWithQueue` function commits all changes for the
+specified scene (`scene` argument). This internally triggers building
+of a spatial acceleration structure for the scene using all available
+worker threads. Ray queries can be performed only after committing all
+scene changes.
+
+The `rtcCommitSceneWithQueue` function differs from `rtcCommitScene`
+only in that the former uses a SYCL queue passed by the application for
+asynchronous host-to-device memory transfers and the latter uses an
+internal and temporary SYCL queue and is blocking, i.e. the function
+returns after all memory transfers are completed.
+
+The application is responsible for synchronization when using
+`rtcCommitSceneWithQueue` by either calling `wait()` on the `queue` or
+use the optional `event` argument to receive a copy of the sycl::event
+associated with the last memcpy command that was submitted to the
+queue. The argument `event` can also be a null pointer in which case
+the argument will be ignored internally.
+
+A SYCL kernel calling rtcTraversableIntersect or rtcTraversableOccluded
+using a RTCTraversable associated with the RTCScene `scene` has a
+dependency on the host-to-device memory transfers and therefore has to
+be synchronized properly.
+
+This function is only available when SYCL support is enabled. In case
+the RTCDevice associated with the `scene` is not a SYCL device,
+`rtcCommitSceneWithQueue` will behave the same as `rtcCommitScene`.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcCommitScene]
+
+```{=tex}
+
+```
+## rtcJoinCommitScene
 
 #### NAME {#name}
 
@@ -2605,8 +2788,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetSceneProgressMonitorFunction
-----------------------------------
+## rtcSetSceneProgressMonitorFunction
 
 #### NAME {#name}
 
@@ -2668,8 +2850,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetSceneBuildQuality
------------------------
+## rtcSetSceneBuildQuality
 
 #### NAME {#name}
 
@@ -2721,8 +2902,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetSceneFlags
-----------------
+## rtcSetSceneFlags
 
 #### NAME {#name}
 
@@ -2782,8 +2962,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetSceneFlags
-----------------
+## rtcGetSceneFlags
 
 #### NAME {#name}
 
@@ -2816,8 +2995,7 @@ that can be queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-rtcGetSceneBounds
------------------
+## rtcGetSceneBounds
 
 #### NAME {#name}
 
@@ -2862,8 +3040,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetSceneLinearBounds
------------------------
+## rtcGetSceneLinearBounds
 
 #### NAME {#name}
 
@@ -2910,8 +3087,42 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcNewGeometry
---------------
+## rtcGetSceneTraversable
+
+#### NAME {#name}
+
+    rtcGetSceneTraversable - gets a read-only hand to a RTCScene object
+      that is also valid on a SYCL device and can be used for ray queries.
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    RTCTraversable rtcGetSceneTraversable(RTCScene scene);
+
+#### DESCRIPTION {#description}
+
+The `rtcGetSceneTraversable` function returns a read-only handle to a
+RTCScene object (`scene` argument). Traversable objects are used for
+ray queries on a SYCL device.
+
+Traversable objects can also be used in host/CPU code and Embree
+provides other API calls such as the `rtcTraversablePointQuery` to help
+write portable code compatible with CPU and SYCL device execution.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcTraversableIntersect1]
+
+```{=tex}
+
+```
+## rtcNewGeometry
 
 #### NAME {#name}
 
@@ -2946,7 +3157,8 @@ rtcNewGeometry
      RTC_GEOMETRY_TYPE_DISC_POINT,
      RTC_GEOMETRY_TYPE_ORIENTED_DISC_POINT,
      RTC_GEOMETRY_TYPE_USER,
-     RTC_GEOMETRY_TYPE_INSTANCE
+     RTC_GEOMETRY_TYPE_INSTANCE,
+     RTC_GEOMETRY_TYPE_INSTANCE_ARRAY,
     };
 
     RTCGeometry rtcNewGeometry(
@@ -2986,8 +3198,8 @@ bases (`RTC_GEOMETRY_TYPE_FLAT_LINEAR_CURVE`,
 (`RTC_GEOMETRY_TYPE_GRID`), point geometries
 (`RTC_GEOMETRY_TYPE_SPHERE_POINT`, `RTC_GEOMETRY_TYPE_DISC_POINT`,
 `RTC_TYPE_ORIENTED_DISC_POINT`), user-defined geometries
-(`RTC_GEOMETRY_TYPE_USER`), and instances
-(`RTC_GEOMETRY_TYPE_INSTANCE`).
+(`RTC_GEOMETRY_TYPE_USER`), instances (`RTC_GEOMETRY_TYPE_INSTANCE`),
+and instance arrays (`RTC_GEOMETRY_TYPE_INSTANCE_ARRAY`).
 
 The types `RTC_GEOMETRY_TYPE_ROUND_BEZIER_CURVE`,
 `RTC_GEOMETRY_TYPE_ROUND_BSPLINE_CURVE`, and
@@ -3042,16 +3254,16 @@ queried using `rtcGetDeviceError`.
 [rtcSetGeometryUserData], [rtcGetGeometryUserData],
 [rtcCommitGeometry], [rtcInterpolate], [rtcInterpolateN],
 [rtcSetGeometryBuildQuality], [rtcSetSceneBuildQuality],
-[RTC\_GEOMETRY\_TYPE\_TRIANGLE], [RTC\_GEOMETRY\_TYPE\_QUAD],
-[RTC\_GEOMETRY\_TYPE\_SUBDIVISION], [RTC\_GEOMETRY\_TYPE\_CURVE],
-[RTC\_GEOMETRY\_TYPE\_GRID], [RTC\_GEOMETRY\_TYPE\_POINT],
-[RTC\_GEOMETRY\_TYPE\_USER], [RTC\_GEOMETRY\_TYPE\_INSTANCE]
+[RTC_GEOMETRY_TYPE_TRIANGLE], [RTC_GEOMETRY_TYPE_QUAD],
+[RTC_GEOMETRY_TYPE_SUBDIVISION], [RTC_GEOMETRY_TYPE_CURVE],
+[RTC_GEOMETRY_TYPE_GRID], [RTC_GEOMETRY_TYPE_POINT],
+[RTC_GEOMETRY_TYPE_USER], [RTC_GEOMETRY_TYPE_INSTANCE],
+[RTC_GEOMETRY_TYPE_INSTANCE_ARRAY]
 
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_TRIANGLE
------------------------------
+## RTC_GEOMETRY_TYPE_TRIANGLE
 
 #### NAME {#name}
 
@@ -3092,7 +3304,7 @@ A triangle whose vertices are laid out counter-clockwise has its
 geometry normal pointing upwards outside the front face, like
 illustrated in the following picture:
 
-![][imgTriangleUV]
+\![][imgTriangleUV]
 
 For multi-segment motion blur, the number of time steps must be first
 specified using the `rtcSetGeometryTimeStepCount` call. Then a vertex
@@ -3114,8 +3326,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_QUAD
--------------------------
+## RTC_GEOMETRY_TYPE_QUAD
 
 #### NAME {#name}
 
@@ -3164,7 +3375,7 @@ A quad whose vertices are laid out counter-clockwise has its geometry
 normal pointing upwards outside the front face, like illustrated in the
 following picture.
 
-![][imgQuadUV]
+\![][imgQuadUV]
 
 For multi-segment motion blur, the number of time steps must be first
 specified using the `rtcSetGeometryTimeStepCount` call. Then a vertex
@@ -3183,8 +3394,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_GRID
--------------------------
+## RTC_GEOMETRY_TYPE_GRID
 
 #### NAME {#name}
 
@@ -3255,8 +3465,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_SUBDIVISION
---------------------------------
+## RTC_GEOMETRY_TYPE_SUBDIVISION
 
 #### NAME {#name}
 
@@ -3432,8 +3641,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_CURVE
---------------------------
+## RTC_GEOMETRY_TYPE_CURVE
 
 #### NAME {#name}
 
@@ -3711,8 +3919,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_POINT
---------------------------
+## RTC_GEOMETRY_TYPE_POINT
 
 #### NAME {#name}
 
@@ -3788,8 +3995,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_USER
--------------------------
+## RTC_GEOMETRY_TYPE_USER
 
 #### NAME {#name}
 
@@ -3857,8 +4063,7 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTC\_GEOMETRY\_TYPE\_INSTANCE
------------------------------
+## RTC_GEOMETRY_TYPE_INSTANCE
 
 #### NAME {#name}
 
@@ -3929,8 +4134,98 @@ queried using `rtcGetDeviceError`.
 ```{=tex}
 
 ```
-RTCCurveFlags
--------------
+## RTC_GEOMETRY_TYPE_INSTANCE_ARRAY
+
+#### NAME {#name}
+
+    RTC_GEOMETRY_TYPE_INSTANCE_ARRAY - instance array geometry type
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    RTCGeometry geometry =
+       rtcNewGeometry(device, RTC_GEOMETRY_TYPE_INSTANCE_ARRAY);
+
+#### DESCRIPTION {#description}
+
+Embree supports instance arrays, which is a more memory efficient way
+to represent large amounts of instances of the same or a small set of
+(sub)scenes. The main difference to regular Embree instances is that
+Embree instance arrays have a buffer of transformations (either affine
+transformations or quaternion decompositions
+[RTCQuaternionDecomposition]) that can be allocated by Embree or a
+shared buffer, similar to vertex buffers for triangle meshes.
+Optionally, instead of instancing only one scene, an instance array can
+instance multiple scenes by passing an array of scenes and a
+corresponding index buffer that specifies which instance of the
+instance array instances which of the scenes in the scenes array.
+
+Instance arrays are created by passing
+`RTC_GEOMETRY_TYPE_INSTANCE_ARRAY` to the `rtcNewGeometry` function
+call. The instanced scene can be either be set using the
+`rtcSetGeometryInstancedScene` call, or if multiple scenes should be
+instanced by passing an array of scenes using
+`rtcSetGeometryInstancedScenes`. The latter also requires to specify an
+index buffer using `rtcSetNewGeometryBuffer` or
+`rtcSetSharedGeometryBuffer` with `RTC_BUFFER_TYPE_INDEX` as the buffer
+type.
+
+Because the transformation information can become large for a large
+amount of instances, the instance array allows to share the
+transformation buffer between the user application and Embree. It can
+be either stored in a buffer created by Embree with
+`rtcSetNewGeometryBuffer` or an already existing buffer can be shared
+using `rtcSetSharedGeometryBuffer`. In either case, the buffer type has
+to be `RTC_BUFFER_TYPE_TRANSFORM` and the allowed formats are
+`RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR`, `RTC_FORMAT_FLOAT3X4_COLUMN_MAJOR`,
+`RTC_FORMAT_FLOAT3X4_ROW_MAJOR`, and
+`RTC_FORMAT_QUATERNION_DECOMPOSITION`. Embree will not modify the data
+in the transformation buffer.
+
+Embree instance arrays support both single-level instancing and
+multi-level instancing. The maximum instance nesting depth is
+`RTC_MAX_INSTANCE_LEVEL_COUNT`; it can be configured at compile-time
+using the constant `EMBREE_MAX_INSTANCE_LEVEL_COUNT`. Users should
+adapt this constant to their needs: instances nested any deeper are
+silently ignored in release mode, and cause assertions in debug mode.
+
+Please note that `rtcCommitScene` on the instanced scene(s) should be
+called first, followed by `rtcCommitGeometry` on the instance array,
+followed by `rtcCommitScene` for the top-level scene containing the
+instance array.
+
+If a ray hits the instance, the `geomID` and `primID` members of the
+hit are set to the geometry ID and primitive ID of the hit primitive in
+the instanced scene. The `instID` member of the hit is set to the
+geometry ID of the instance array in the top-level scene and the
+`instPrimID` member is set to the index of the hit instance of the
+instance array.
+
+For multi-segment motion blur, the number of time steps must be first
+specified using the `rtcSetGeometryTimeStepCount` function. Then a
+transformation for each time step can be specified using the
+`rtcSetNewGeometryBuffer` or `rtcSetSharedGeometryBuffer` function and
+passing the time step as the `slot` parameter of these calls.
+
+See the [Instance Array Geometry] tutorial for an example of how to
+use instance arrays.
+
+#### EXIT STATUS {#exit-status}
+
+On failure `NULL` is returned and an error code is set that can be
+queried using `rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcNewGeometry], [rtcSetGeometryInstancedScene],
+[rtcSetGeometryInstancedScenes], [rtcSetNewGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcGetGeometryTransformEx]
+
+```{=tex}
+
+```
+## RTCCurveFlags
 
 #### NAME {#name}
 
@@ -3950,18 +4245,18 @@ RTCCurveFlags
 
 The RTCCurveFlags type is used for linear curves to determine if the
 left and/or right neighbor segment exist. Therefore one attaches a
-buffer of type RTC\_BUFFER\_TYPE\_FLAGS to the curve geometry which
-stores an individual byte per curve segment.
+buffer of type RTC_BUFFER_TYPE_FLAGS to the curve geometry which stores
+an individual byte per curve segment.
 
-If the RTC\_CURVE\_FLAG\_NEIGHBOR\_LEFT flag in that byte is enabled
-for a curve segment, then the left segment exists (which starts one
-vertex before the start vertex of the current curve) and the current
-segment is rendered to properly attach to that segment.
+If the RTC_CURVE_FLAG_NEIGHBOR_LEFT flag in that byte is enabled for a
+curve segment, then the left segment exists (which starts one vertex
+before the start vertex of the current curve) and the current segment
+is rendered to properly attach to that segment.
 
-If the RTC\_CURVE\_FLAG\_NEIGHBOR\_RIGHT flag in that byte is enabled
-for a curve segment, then the right segment exists (which ends one
-vertex after the end vertex of the current curve) and the current
-segment is rendered to properly attach to that segment.
+If the RTC_CURVE_FLAG_NEIGHBOR_RIGHT flag in that byte is enabled for a
+curve segment, then the right segment exists (which ends one vertex
+after the end vertex of the current curve) and the current segment is
+rendered to properly attach to that segment.
 
 When not properly specifying left and right flags for linear curves,
 the rendering at the ending of these curves may not look correct, in
@@ -3971,13 +4266,12 @@ particular when round linear curves are viewed from the inside.
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_CURVE]
+[RTC_GEOMETRY_TYPE_CURVE]
 
 ```{=tex}
 
 ```
-rtcRetainGeometry
------------------
+## rtcRetainGeometry
 
 #### NAME {#name}
 
@@ -4009,8 +4303,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcReleaseGeometry
-------------------
+## rtcReleaseGeometry
 
 #### NAME {#name}
 
@@ -4041,8 +4334,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcCommitGeometry
------------------
+## rtcCommitGeometry
 
 #### NAME {#name}
 
@@ -4074,8 +4366,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcEnableGeometry
------------------
+## rtcEnableGeometry
 
 #### NAME {#name}
 
@@ -4108,8 +4399,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcDisableGeometry
-------------------
+## rtcDisableGeometry
 
 #### NAME {#name}
 
@@ -4142,8 +4432,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryTimeStepCount
----------------------------
+## rtcSetGeometryTimeStepCount
 
 #### NAME {#name}
 
@@ -4195,8 +4484,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryTimeRange
------------------------
+## rtcSetGeometryTimeRange
 
 #### NAME {#name}
 
@@ -4251,8 +4539,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryVertexAttributeCount
-----------------------------------
+## rtcSetGeometryVertexAttributeCount
 
 #### NAME {#name}
 
@@ -4292,8 +4579,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryMask
-------------------
+## rtcSetGeometryMask
 
 #### NAME {#name}
 
@@ -4332,8 +4618,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryBuildQuality
---------------------------
+## rtcSetGeometryBuildQuality
 
 #### NAME {#name}
 
@@ -4384,8 +4669,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryMaxRadiusScale
-----------------------------
+## rtcSetGeometryMaxRadiusScale
 
 #### NAME {#name}
 
@@ -4404,7 +4688,7 @@ factor for curve radii used by the min-width feature.
 
 The min-width feature can increase the radius of curves and points, in
 order to reduce aliasing and improve render times. The feature is
-disabled by default and has to get enabled using the EMBREE\_MIN\_WIDTH
+disabled by default and has to get enabled using the EMBREE_MIN_WIDTH
 cmake option.
 
 To use the feature, one has to specify a maximal curve radius scaling
@@ -4453,8 +4737,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryBuffer
---------------------
+## rtcSetGeometryBuffer
 
 #### NAME {#name}
 
@@ -4505,8 +4788,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetSharedGeometryBuffer
---------------------------
+## rtcSetSharedGeometryBuffer
 
 #### NAME {#name}
 
@@ -4555,6 +4837,11 @@ The buffer data must remain valid for as long as the buffer may be
 used, and the user is responsible for freeing the buffer data when no
 longer required.
 
+If using a SYCL Embree device, `ptr` must be allocated using SYCL USM
+shared memory to be accessible on the device. Alternatively the
+function `rtcSetSharedGeometryBufferHostDevice` can be used to pass an
+explicitly managed host/device buffer pair.
+
 Sharing buffers can significantly reduce the memory required by the
 application, thus we recommend using this feature. When enabling the
 `RTC_SCENE_FLAG_COMPACT` scene flag, the spatial index structures index
@@ -4567,13 +4854,92 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[rtcSetGeometryBuffer], [rtcSetNewGeometryBuffer]
+[rtcSetSharedGeometryBufferHostDevice], [rtcSetGeometryBuffer],
+[rtcSetNewGeometryBuffer]
 
 ```{=tex}
 
 ```
-rtcSetNewGeometryBuffer
------------------------
+## rtcSetSharedGeometryBufferHostDevice
+
+#### NAME {#name}
+
+    rtcSetSharedGeometryBufferHostDevice - assigns views of shared data buffers
+      to a geometry using explicit host and device memory
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcSetSharedGeometryBuffer(
+      RTCGeometry geometry,
+      enum RTCBufferType type,
+      unsigned int slot,
+      enum RTCFormat format,
+      const void* ptr,
+      const void* dptr,
+      size_t byteOffset,
+      size_t byteStride,
+      size_t itemCount
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcSetSharedGeometryBufferHostDevice` function binds views of a
+shared user-managed data buffers to a geometry buffer type and slot
+(`type` and `slot` argument) of the specified geometry (`geometry`
+argument). The user-managed data buffers are passed using the `ptr`
+argument for the host side allocated memory and the `dptr` parameter
+for the memory allocated on the device.
+
+One can specify the start of the first buffer element in bytes
+(`byteOffset` argument), the byte stride between individual buffer
+elements (`byteStride` argument), the format of the buffer elements
+(`format` argument), and the number of elements to bind (`itemCount`).
+
+The start address (`byteOffset` argument) and stride (`byteStride`
+argument) must be both aligned to 4 bytes; otherwise the
+`rtcSetSharedGeometryBufferHostDevice` function will fail.
+
+When the buffer will be used as a vertex buffer
+(`RTC_BUFFER_TYPE_VERTEX` and `RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE`), the
+last buffer element must be readable using 16-byte SSE load
+instructions, thus padding the last element is required for certain
+layouts. E.g. a standard `float3` vertex buffer layout should add
+storage for at least one more float to the end of the buffer.
+
+The buffer data must remain valid for as long as the buffer may be
+used, and the user is responsible for freeing the buffer data when no
+longer required.
+
+The application is responsible of keeping the host and device memory in
+sync. The host memory has to be updated before calls of
+`rtcCommitScene` involving the associated geometry.
+
+If Embree has no SYCL support or the associated Embree device is no
+SYCL device the `dptr` argument must be a null pointer. In this case
+the function `rtcSetSharedGeometryBufferHostDevice` will behave like
+`rtcSetSharedGeometryBuffer`.
+
+Sharing buffers can significantly reduce the memory required by the
+application, thus we recommend using this feature. When enabling the
+`RTC_SCENE_FLAG_COMPACT` scene flag, the spatial index structures index
+into the vertex buffer, resulting in even higher memory savings.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcSetSharedGeometryBuffer], [rtcSetGeometryBuffer],
+[rtcSetNewGeometryBuffer]
+
+```{=tex}
+
+```
+## rtcSetNewGeometryBuffer
 
 #### NAME {#name}
 
@@ -4621,8 +4987,77 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-RTCFormat
----------
+## rtcSetNewGeometryBufferHostDevice
+
+#### NAME {#name}
+
+    rtcSetNewGeometryBufferHostDevice - creates and assigns a new host/device
+      data buffer pair to the geometry
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcSetNewGeometryBufferHostDevice(
+      RTCGeometry geometry,
+      enum RTCBufferType type,
+      unsigned int slot,
+      enum RTCFormat format,
+      size_t byteStride,
+      size_t itemCount,
+      void** ptr,
+      void** dptr
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcSetNewGeometryBufferHostDevice` function creates a new
+host/device data buffer pair of specified format (`format` argument),
+byte stride (`byteStride` argument), and number of items (`itemCount`
+argument), and assigns it to a geometry buffer slot (`type` and `slot`
+argument) of the specified geometry (`geometry` argument). The buffer
+data is managed internally and automatically freed when the geometry is
+destroyed.
+
+The byte stride (`byteStride` argument) must be aligned to 4 bytes;
+otherwise the `rtcSetNewGeometryBufferHostDevice` function will fail.
+
+The allocated buffer will be automatically over-allocated slightly when
+used as a vertex buffer, where a requirement is that each buffer
+element should be readable using 16-byte SSE load instructions.
+
+If `ptr` is not null, it will be used to return the address of the host
+data buffer. If `dptr` is not null, it will be used to return the
+address of the device data buffer. Either `ptr` or `dptr` or both can
+be null. In this case `rtcGetGeometryBufferData` and
+`rtcGetGeometryBufferDataDevice` can be used to get the addresses of
+the host and device data buffers.
+
+The application is responsible of keeping the host and device memory in
+sync. The host memory has to be updated before calls of
+`rtcCommitScene` involving the associated geometry.
+
+If Embree has no SYCL support or the associated Embree device is no
+SYCL device the `dptr` argument will return the same address as `ptr`
+if on null. In this case the function
+`rtcSetNewGeometryBufferHostDevice` will behave like
+`rtcSetSharedGeometryBuffer`.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcSetNewGeometryBuffer], [rtcSetGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcGetGeometryBufferData],
+[rtcGetGeometryBufferDataDevice]
+
+```{=tex}
+
+```
+## RTCFormat
 
 #### NAME {#name}
 
@@ -4663,6 +5098,8 @@ RTCFormat
       RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR,
 
       RTC_FORMAT_GRID,
+
+      RTC_FORMAT_QUATERNION_DECOMPOSITION
     };
 
 #### DESCRIPTION {#description}
@@ -4688,13 +5125,16 @@ The `RTC_FORMAT_FLOAT3X4_ROW_MAJOR` and
 point matrix layed out either row major or column major. The
 `RTC_FORMAT_FLOAT4X4_ROW_MAJOR` and `RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR`
 formats, specify a 4x4 floating point matrix layed out either row major
-or column major. These matrix formats are used in the
-[rtcSetGeometryTransform] function in order to set a transformation
-matrix for geometries.
+or column major. The `RTC_FORMAT_QUATERNION_DECOMPOSITION` format
+specifies a structure that represents a quaternion decomposition (see
+[RTCQuaternionDecomposition]) of an affine transformation. These
+formats are used in the [rtcSetGeometryTransform] function or in
+geometry buffers with type `RTC_BUFFER_TYPE_TRANSFORM` in order to set
+a transformation matrix for instance and instance array geometries.
 
 The `RTC_FORMAT_GRID` is a special data format used to specify grid
 primitives of layout RTCGrid when creating grid geometries (see
-[RTC\_GEOMETRY\_TYPE\_GRID]).
+[RTC_GEOMETRY_TYPE_GRID]).
 
 #### EXIT STATUS {#exit-status}
 
@@ -4702,12 +5142,12 @@ primitives of layout RTCGrid when creating grid geometries (see
 
 [rtcSetGeometryBuffer], [rtcSetSharedGeometryBuffer],
 [rtcSetNewGeometryBuffer], [rtcSetGeometryTransform]
+[RTCQuaternionDecomposition]
 
 ```{=tex}
 
 ```
-RTCBufferType
--------------
+## RTCBufferType
 
 #### NAME {#name}
 
@@ -4735,6 +5175,8 @@ RTCBufferType
       RTC_BUFFER_TYPE_VERTEX_CREASE_INDEX  = 20,
       RTC_BUFFER_TYPE_VERTEX_CREASE_WEIGHT = 21,
       RTC_BUFFER_TYPE_HOLE                 = 22,
+      
+      RTC_BUFFER_TYPE_TRANSFORM            = 23,
 
       RTC_BUFFER_TYPE_FLAGS = 32
     };
@@ -4759,7 +5201,7 @@ assign per vertex normals, tangents, and normal derivatives for some
 curve types.
 
 The `RTC_BUFFER_TYPE_GRID` buffer is used to assign the grid primitive
-buffer for grid geometries (see [RTC\_GEOMETRY\_TYPE\_GRID]).
+buffer for grid geometries (see [RTC_GEOMETRY_TYPE_GRID]).
 
 The `RTC_BUFFER_TYPE_FACE`, `RTC_BUFFER_TYPE_LEVEL`,
 `RTC_BUFFER_TYPE_EDGE_CREASE_INDEX`,
@@ -4767,7 +5209,11 @@ The `RTC_BUFFER_TYPE_FACE`, `RTC_BUFFER_TYPE_LEVEL`,
 `RTC_BUFFER_TYPE_VERTEX_CREASE_INDEX`,
 `RTC_BUFFER_TYPE_VERTEX_CREASE_WEIGHT`, and `RTC_BUFFER_TYPE_HOLE` are
 special buffers required to create subdivision meshes (see
-[RTC\_GEOMETRY\_TYPE\_SUBDIVISION]).
+[RTC_GEOMETRY_TYPE_SUBDIVISION]).
+
+The `RTC_BUFFER_TYPE_TRANSFORM` buffer is used to provide instance
+transformation information for instance array geometries (see
+[RTC_GEOMETRY_TYPE_INSTANCE_ARRAY]).
 
 The `RTC_BUFFER_TYPE_FLAGS` can get used to add additional flag per
 primitive of a geometry, and is currently only used for linear curves.
@@ -4782,8 +5228,7 @@ primitive of a geometry, and is currently only used for linear curves.
 ```{=tex}
 
 ```
-rtcGetGeometryBufferData
-------------------------
+## rtcGetGeometryBufferData
 
 #### NAME {#name}
 
@@ -4807,6 +5252,51 @@ element of the buffer view attached to the specified buffer type and
 slot (`type` and `slot` argument) of the geometry (`geometry`
 argument).
 
+If the device associated with `geometry` is a SYCL device, the returned
+pointer only accessible on the host. The function
+`rtcGetGeometryBufferDataDevice` can be used to get a pointer
+accessible on the SYCL device. \#### EXIT STATUS
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcGetGeometryBufferDataDevice], [rtcSetGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcSetNewGeometryBuffer]
+
+```{=tex}
+
+```
+## rtcGetGeometryBufferDataDevice
+
+#### NAME {#name}
+
+    rtcGetGeometryBufferDataDevice - gets pointer to
+      the first buffer view element on the device.
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void* rtcGetGeometryBufferDataDevice(
+      RTCGeometry geometry,
+      enum RTCBufferType type,
+      unsigned int slot
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcGetGeometryBufferDataDevice` function returns a pointer to the
+first element of the buffer view attached to the specified buffer type
+and slot (`type` and `slot` argument) of the geometry (`geometry`
+argument) on the device.
+
+If the device associated with `geometry` is no SYCL device, or if
+Embree is executed on a system with host unified memory (e.g., on an
+iGPU), the returned pointer is the same as the one returned by
+`rtcGetGeometryBufferData`.
+
 #### EXIT STATUS {#exit-status}
 
 On failure an error code is set that can be queried using
@@ -4814,14 +5304,13 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[rtcSetGeometryBuffer], [rtcSetSharedGeometryBuffer],
-[rtcSetNewGeometryBuffer]
+[rtcGetGeometryBufferData], [rtcSetGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcSetNewGeometryBuffer]
 
 ```{=tex}
 
 ```
-rtcUpdateGeometryBuffer
------------------------
+## rtcUpdateGeometryBuffer
 
 #### NAME {#name}
 
@@ -4862,8 +5351,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryIntersectFilterFunction
--------------------------------------
+## rtcSetGeometryIntersectFilterFunction
 
 #### NAME {#name}
 
@@ -4974,8 +5462,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryOccludedFilterFunction
-------------------------------------
+## rtcSetGeometryOccludedFilterFunction
 
 #### NAME {#name}
 
@@ -5033,8 +5520,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryEnableFilterFunctionFromArguments
------------------------------------------------
+## rtcSetGeometryEnableFilterFunctionFromArguments
 
 #### NAME {#name}
 
@@ -5081,8 +5567,7 @@ On failure an error code is set that can get queried using
 ```{=tex}
 
 ```
-rtcInvokeIntersectFilterFromGeometry
-------------------------------------
+## rtcInvokeIntersectFilterFromGeometry
 
 #### NAME {#name}
 
@@ -5123,8 +5608,7 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcInvokeOccludedFilterFromGeometry
------------------------------------
+## rtcInvokeOccludedFilterFromGeometry
 
 #### NAME {#name}
 
@@ -5165,8 +5649,7 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcSetGeometryUserData
-----------------------
+## rtcSetGeometryUserData
 
 #### NAME {#name}
 
@@ -5203,8 +5686,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryUserData
-----------------------
+## rtcGetGeometryUserData
 
 #### NAME {#name}
 
@@ -5240,8 +5722,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryUserDataFromScene
--------------------------------
+## rtcGetGeometryUserDataFromScene
 
 #### NAME {#name}
 
@@ -5277,8 +5758,12 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryUserPrimitiveCount
---------------------------------
+## rtcGetGeometryUserDataFromTraversable
+
+`{include=src/api/rtcGetGeometryUserDataFromScenTraversable`
+``{=tex}
+
+## rtcSetGeometryUserPrimitiveCount
 
 #### NAME {#name}
 
@@ -5307,13 +5792,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_USER]
+[RTC_GEOMETRY_TYPE_USER]
 
 ```{=tex}
 
 ```
-rtcSetGeometryBoundsFunction
-----------------------------
+## rtcSetGeometryBoundsFunction
 
 #### NAME {#name}
 
@@ -5381,13 +5865,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_USER]
+[RTC_GEOMETRY_TYPE_USER]
 
 ```{=tex}
 
 ```
-rtcSetGeometryIntersectFunction
--------------------------------
+## rtcSetGeometryIntersectFunction
 
 #### NAME {#name}
 
@@ -5495,8 +5978,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryOccludedFunction
-------------------------------
+## rtcSetGeometryOccludedFunction
 
 #### NAME {#name}
 
@@ -5596,8 +6078,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryPointQueryFunction
---------------------------------
+## rtcSetGeometryPointQueryFunction
 
 #### NAME {#name}
 
@@ -5726,8 +6207,7 @@ meshes using instancing and user defined instancing see the tutorial
 ```{=tex}
 
 ```
-rtcGetSYCLDeviceFunctionPointer
--------------------------------
+## rtcGetSYCLDeviceFunctionPointer
 
 #### NAME {#name}
 
@@ -5779,8 +6259,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryInstancedScene
-----------------------------
+## rtcSetGeometryInstancedScene
 
 #### NAME {#name}
 
@@ -5809,13 +6288,53 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_INSTANCE], [rtcSetGeometryTransform]
+[RTC_GEOMETRY_TYPE_INSTANCE], [rtcSetGeometryTransform]
 
 ```{=tex}
 
 ```
-rtcSetGeometryTransform
------------------------
+## rtcSetGeometryInstancedScenes
+
+#### NAME {#name}
+
+    rtcSetGeometryInstancedScenes - sets an array of scenes that can be
+    instanced by an instance array geometry
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcSetGeometryInstancedScenes(
+      RTCGeometry geometry,
+      RTCScene* scene,
+      size_t numScenes
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcSetGeometryInstancedScenes` function sets an array of type
+`RTCScene` with `numScenes` elements that the specified instance
+geometry (`geometry` argument) can instance. This call also requires
+setting an index buffer using either `rtcSetSharedGeometryBuffer` or
+`rtcSetNewGeometryBuffer` (similar to index buffers for triangle
+meshes), that specifies which instance of the instance array instances
+which scene in the scene array. If only one scene should be instanced
+the call `rtcSetGeometryInstancedScene` should be preferred.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[RTC_GEOMETRY_TYPE_INSTANCE_ARRAY], [rtcSetNewGeometryBuffer],
+[rtcSetSharedGeometryBuffer], [rtcSetGeometryInstancedScene]
+
+```{=tex}
+
+```
+## rtcSetGeometryTransform
 
 #### NAME {#name}
 
@@ -5859,13 +6378,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_INSTANCE]
+[RTC_GEOMETRY_TYPE_INSTANCE]
 
 ```{=tex}
 
 ```
-rtcSetGeometryTransformQuaternion
----------------------------------
+## rtcSetGeometryTransformQuaternion
 
 #### NAME {#name}
 
@@ -5921,8 +6439,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryTransform
------------------------
+## rtcGetGeometryTransform
 
 #### NAME {#name}
 
@@ -5971,14 +6488,67 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_INSTANCE], [rtcSetGeometryTransform],
+[RTC_GEOMETRY_TYPE_INSTANCE], [rtcSetGeometryTransform],
 [rtcGetGeometryTransformFromScene]
 
 ```{=tex}
 
 ```
-rtcGetGeometryTransformFromScene
---------------------------------
+## rtcGetGeometryTransformEx
+
+#### NAME {#name}
+
+    rtcGetGeometryTransformEx - returns the interpolated instance
+    transformation for an instance of an instance array geometry for the
+    specified time.
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcGetGeometryTransformEx(
+      RTCGeometry geometry,
+      unsigned int instPrimID,
+      float time,
+      enum RTCFormat format,
+      void* xfm
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcGetGeometryTransformEx` function returns the interpolated local
+to world transformation (`xfm` parameter) of the `instPrimID`-th
+instance of an instance array geometry (`geometry` parameter) for a
+particular time (`time` parameter in range $[0,1]$) in the specified
+format (`format` parameter). The function can also be used when
+`geometry` refers to a regular instance, but then the `instPrimID` has
+to be $0$.
+
+Possible formats for the returned matrix are:
+
+-   `RTC_FORMAT_FLOAT3X4_ROW_MAJOR`: The 3×4 float matrix is laid out
+    in row-major form.
+
+-   `RTC_FORMAT_FLOAT3X4_COLUMN_MAJOR`: The 3×4 float matrix is laid
+    out in column-major form.
+
+-   `RTC_FORMAT_FLOAT4X4_COLUMN_MAJOR`: The 3×4 float matrix is laid
+    out in column-major form as a 4×4 homogeneous matrix with last row
+    equal to (0, 0, 0, 1).
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[RTC_GEOMETRY_TYPE_INSTANCE_ARRAY]
+
+```{=tex}
+
+```
+## rtcGetGeometryTransformFromScene
 
 #### NAME {#name}
 
@@ -6028,14 +6598,54 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_INSTANCE], [rtcSetGeometryTransform],
+[RTC_GEOMETRY_TYPE_INSTANCE], [rtcSetGeometryTransform],
 [rtcGetGeometryTransform]
 
 ```{=tex}
 
 ```
-rtcSetGeometryTessellationRate
-------------------------------
+## rtcGetGeometryTransformFromTraversable
+
+#### NAME {#name}
+
+    rtcGetGeometryTransformFromTraversable - returns the interpolated instance
+      transformation for the specified time
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcGetGeometryTransformFromTraversable(
+      RTCTraversable traversable,
+      unsigned int geomID,
+      float time,
+      enum RTCFormat format,
+      void* xfm
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcGetGeometryTransformFromTraversable` function is equivalent to
+`rtcGetGeometryTransformFromScene` but takes traversable object
+(`traversable` argument) instead of a scene object. Using this method
+is optional on CPU but it is required for SYCL.
+
+For more details, refer to the documentation of
+`rtcGetGeometryTransformFromScene`.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcGetGeometryTransformFromScene], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcSetGeometryTessellationRate
 
 #### NAME {#name}
 
@@ -6068,13 +6678,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_CURVE], [RTC\_GEOMETRY\_TYPE\_SUBDIVISION]
+[RTC_GEOMETRY_TYPE_CURVE], [RTC_GEOMETRY_TYPE_SUBDIVISION]
 
 ```{=tex}
 
 ```
-rtcSetGeometryTopologyCount
----------------------------
+## rtcSetGeometryTopologyCount
 
 #### NAME {#name}
 
@@ -6109,13 +6718,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_SUBDIVISION], [rtcSetGeometrySubdivisionMode]
+[RTC_GEOMETRY_TYPE_SUBDIVISION], [rtcSetGeometrySubdivisionMode]
 
 ```{=tex}
 
 ```
-rtcSetGeometrySubdivisionMode
------------------------------
+## rtcSetGeometrySubdivisionMode
 
 #### NAME {#name}
 
@@ -6167,13 +6775,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_SUBDIVISION]
+[RTC_GEOMETRY_TYPE_SUBDIVISION]
 
 ```{=tex}
 
 ```
-rtcSetGeometryVertexAttributeTopology
--------------------------------------
+## rtcSetGeometryVertexAttributeTopology
 
 #### NAME {#name}
 
@@ -6221,8 +6828,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcSetGeometryDisplacementFunction
-----------------------------------
+## rtcSetGeometryDisplacementFunction
 
 #### NAME {#name}
 
@@ -6305,13 +6911,12 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[RTC\_GEOMETRY\_TYPE\_SUBDIVISION]
+[RTC_GEOMETRY_TYPE_SUBDIVISION]
 
 ```{=tex}
 
 ```
-rtcGetGeometryFirstHalfEdge
----------------------------
+## rtcGetGeometryFirstHalfEdge
 
 #### NAME {#name}
 
@@ -6333,7 +6938,7 @@ half edge belonging to the specified face (`faceID` argument). For
 instance in the following example the first half edge of face `f1` is
 `e4`.
 
-![][imgHalfEdges]
+\![][imgHalfEdges]
 
 This function can only be used for subdivision geometries. As all
 topologies of a subdivision geometry share the same face buffer the
@@ -6360,8 +6965,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryFace
-------------------
+## rtcGetGeometryFace
 
 #### NAME {#name}
 
@@ -6383,7 +6987,7 @@ specified half edge (`edgeID` argument) belongs to. For instance in the
 following example the face `f1` is returned for edges `e4`, `e5`, `e6`,
 and `e7`.
 
-![][imgHalfEdges]
+\![][imgHalfEdges]
 
 This function can only be used for subdivision geometries. As all
 topologies of a subdivision geometry share the same face buffer the
@@ -6403,8 +7007,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryNextHalfEdge
---------------------------
+## rtcGetGeometryNextHalfEdge
 
 #### NAME {#name}
 
@@ -6425,7 +7028,7 @@ The `rtcGetGeometryNextHalfEdge` function returns the ID of the next
 half edge of the specified half edge (`edgeID` argument). For instance
 in the following example the next half edge of `e10` is `e11`.
 
-![][imgHalfEdges]
+\![][imgHalfEdges]
 
 This function can only be used for subdivision geometries. As all
 topologies of a subdivision geometry share the same face buffer the
@@ -6445,8 +7048,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryPreviousHalfEdge
-------------------------------
+## rtcGetGeometryPreviousHalfEdge
 
 #### NAME {#name}
 
@@ -6468,7 +7070,7 @@ previous half edge of the specified half edge (`edgeID` argument). For
 instance in the following example the previous half edge of `e6` is
 `e5`.
 
-![][imgHalfEdges]
+\![][imgHalfEdges]
 
 This function can only be used for subdivision geometries. As all
 topologies of a subdivision geometry share the same face buffer the
@@ -6488,8 +7090,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetGeometryOppositeHalfEdge
-------------------------------
+## rtcGetGeometryOppositeHalfEdge
 
 #### NAME {#name}
 
@@ -6512,7 +7113,7 @@ opposite half edge of the specified half edge (`edgeID` argument) in
 the specified topology (`topologyID` argument). For instance in the
 following example the opposite half edge of `e6` is `e16`.
 
-![][imgHalfEdges]
+\![][imgHalfEdges]
 
 An opposite half edge does not exist if the specified half edge has
 either no neighboring face, or more than 2 neighboring faces. In these
@@ -6536,8 +7137,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcInterpolate
---------------
+## rtcInterpolate
 
 #### NAME {#name}
 
@@ -6624,8 +7224,7 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcInterpolateN
----------------
+## rtcInterpolateN
 
 #### NAME {#name}
 
@@ -6684,8 +7283,7 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcNewBuffer
-------------
+## rtcNewBuffer
 
 #### NAME {#name}
 
@@ -6717,6 +7315,14 @@ instructions, thus padding the last element is required for certain
 layouts. E.g. a standard `float3` vertex buffer layout should add
 storage for at least one more float to the end of the buffer.
 
+If the `device` is a Embree SYCL device, the buffer will be allocated
+using SYCL USM shared memory, i.e. the buffer can be accessed on the
+host and device (GPU) and the SYCL runtime will handle buffer transfers
+automatically.
+
+For precise control over when memory is copied from host to device, a
+buffer can also be created using `rtcNewBufferHostDevice`.
+
 #### EXIT STATUS {#exit-status}
 
 On failure `NULL` is returned and an error code is set that can be
@@ -6724,13 +7330,65 @@ queried using `rtcGetDeviceError`.
 
 #### SEE ALSO {#see-also}
 
-[rtcRetainBuffer], [rtcReleaseBuffer]
+[rtcNewBufferHostDevice], [rtcRetainBuffer], [rtcReleaseBuffer]
 
 ```{=tex}
 
 ```
-rtcNewSharedBuffer
-------------------
+## rtcNewBufferHostDevice
+
+#### NAME {#name}
+
+    rtcNewBufferHostDevice - creates a new data buffer with 
+      explicitly managed host and device memory allocations
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    RTCBuffer rtcNewBufferHostDevice(
+      RTCDevice device,
+      size_t byteSize
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcNewBufferHostDevice` function creates a new data buffer object
+of specified size in bytes (`byteSize` argument) that is bound to the
+specified device (`device` argument). The buffer object is reference
+counted with an initial reference count of 1. The returned buffer
+object can be released using the `rtcReleaseBuffer` API call. If Embree
+has SYCL support enabled and the SYCL device has no host unifed memory
+(e.g, a discrete GPU), the buffer allocates memory on the host and
+device explicitly. After the buffer is modified on the host
+`rtcCommitBuffer` can be used to synchronize host and device memory by
+copying the buffer content from the host to device. If the Embree
+version has no SYCL support or the SYCL device has host unified memory,
+the buffer will behave the same as a buffer created using
+`rtcNewBuffer`. The specified number of bytes are allocated at buffer
+construction time and deallocated when the buffer is destroyed.
+
+When the buffer will be used as a vertex buffer
+(`RTC_BUFFER_TYPE_VERTEX` and `RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE`), the
+last buffer element must be readable using 16-byte SSE load
+instructions, thus padding the last element is required for certain
+layouts. E.g. a standard `float3` vertex buffer layout should add
+storage for at least one more float to the end of the buffer.
+
+#### EXIT STATUS {#exit-status}
+
+On failure `NULL` is returned and an error code is set that can be
+queried using `rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcCommitBuffer], [rtcNewBuffer], [rtcRetainBuffer],
+[rtcReleaseBuffer]
+
+```{=tex}
+
+```
+## rtcNewSharedBuffer
 
 #### NAME {#name}
 
@@ -6778,13 +7436,72 @@ queried using `rtcGetDeviceError`.
 
 #### SEE ALSO {#see-also}
 
-[rtcRetainBuffer], [rtcReleaseBuffer]
+[rtcNewSharedBufferHostDevice], [rtcRetainBuffer],
+[rtcReleaseBuffer]
 
 ```{=tex}
 
 ```
-rtcRetainBuffer
----------------
+## rtcNewSharedBufferHostDevice
+
+#### NAME {#name}
+
+    rtcNewSharedBufferHostDevice - creates a new shared data buffer
+      with a managed copy of the buffer in device memory
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    RTCBuffer rtcNewSharedBufferHostDevice(
+      RTCDevice device,
+      void* ptr,
+      size_t byteSize
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcNewSharedBufferHostDevice` function creates a new shared data
+buffer object bound to the specified device (`device` argument). The
+buffer object is reference counted with an initial reference count
+of 1. The buffer can be released using the `rtcReleaseBuffer` function.
+
+At construction time, the pointer to the user-managed buffer data
+(`ptr` argument) including its size in bytes (`byteSize` argument) is
+provided to create the buffer. At buffer construction time no buffer
+data is allocated on the host, but the buffer data provided by the
+application is used. A equal sized memory allocation is created on the
+device. The buffer data must remain valid for as long as the buffer may
+be used, and the user is responsible to free the buffer data when no
+longer required.
+
+When the buffer will be used as a vertex buffer
+(`RTC_BUFFER_TYPE_VERTEX` and `RTC_BUFFER_TYPE_VERTEX_ATTRIBUTE`), the
+last buffer element must be readable using 16-byte SSE load
+instructions, thus padding the last element is required for certain
+layouts. E.g. a standard `float3` vertex buffer layout should add
+storage for at least one more float to the end of the buffer.
+
+The data pointer (`ptr` argument) must be aligned to 4 bytes; otherwise
+the `rtcNewSharedBufferHostDevice` function will fail.
+
+The function `rtcCommitBuffer` can be used to synchronize the buffer
+content with the device.
+
+#### EXIT STATUS {#exit-status}
+
+On failure `NULL` is returned and an error code is set that can be
+queried using `rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcNewSharedBuffer], [rtcCommitBuffer], [rtcRetainBuffer],
+[rtcReleaseBuffer]
+
+```{=tex}
+
+```
+## rtcRetainBuffer
 
 #### NAME {#name}
 
@@ -6816,8 +7533,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcReleaseBuffer
-----------------
+## rtcReleaseBuffer
 
 #### NAME {#name}
 
@@ -6848,8 +7564,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcGetBufferData
-----------------
+## rtcGetBufferData
 
 #### NAME {#name}
 
@@ -6864,7 +7579,10 @@ rtcGetBufferData
 #### DESCRIPTION {#description}
 
 The `rtcGetBufferData` function returns a pointer to the buffer data of
-the specified buffer object (`buffer` argument).
+the specified buffer object (`buffer` argument). If the buffer was
+created using `rtcNewBufferHostDevice` and the SYCL device has no host
+unified memory, this pointer is only valid on the host. To get a device
+pointer in this case, use `rtcGetBufferDataDevice`.
 
 #### EXIT STATUS {#exit-status}
 
@@ -6873,13 +7591,126 @@ On failure an error code is set that can be queried using
 
 #### SEE ALSO {#see-also}
 
-[rtcNewBuffer]
+[rtcGetBufferDataDevice], [rtcNewBuffer],
+[rtcNewBufferHostDevice]
 
 ```{=tex}
 
 ```
-RTCRay
-------
+## rtcGetBufferDataDevice
+
+#### NAME {#name}
+
+    rtcGetBufferDataDevice - gets a device pointer to the buffer data
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void* rtcGetBufferDataDevice(RTCBuffer buffer);
+
+#### DESCRIPTION {#description}
+
+The `rtcGetBufferDataDevice` function returns a pointer to the buffer
+data of the specified buffer object (`buffer` argument) which can be
+used for accessing the data on the device. If Embree has no SYCL
+support or the SYCL device has host unified memory, the pointer is
+equal to the pointer returned by `rtcGetBufferData`.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcGetBufferData], [rtcNewBuffer]
+
+```{=tex}
+
+```
+## rtcCommitBuffer
+
+#### NAME {#name}
+
+    rtcCommitBuffer - commits buffer content from host to device
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcCommitBuffer(RTCBuffer buffer);
+
+#### DESCRIPTION {#description}
+
+If the buffer was created using `rtcNewBufferHostDevice` the
+`rtcCommitBuffer` function commits changes of the host buffer data to
+the device. This call is not necessary if the buffer was created with a
+non SYCL Embree device.
+
+The call to `rtcCommitBuffer` will internally use a temporary SYCL
+queue and wait for the memory copy to finish. The function
+`rtcCommitBufferWithQueue` can be used to asyncronously copy the data
+to the device.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcCommitBufferWithQueue] [rtcNewBufferHostDevice]
+
+```{=tex}
+
+```
+## rtcCommitBufferWithQueue
+
+#### NAME {#name}
+
+    rtcCommitBufferWithQueue - commits buffer content from host to device using a given SYCL queue
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcCommitBufferWithQueue(RTCBuffer buffer,
+        sycl::queue queue, sycl::event* event);
+
+#### DESCRIPTION {#description}
+
+If the buffer was created using `rtcNewBufferHostDevice` the
+`rtcCommitBufferWithQueue` function commits changes of the host buffer
+data to the device. If the buffer was created with a non SYCL Embree
+device or the SYCL device has host unified memory, this call has no
+effect.
+
+The call to `rtcCommitBufferWithQueue` will use the given SYCL queue to
+copy the memory asynchronously. If the SYCL event argument `event` is a
+valid pointer, Embree will use this pointer to return a copy of the
+SYCL event associated to the memory copy. The parameter `event` is
+optional and will be ignored if it is a null pointer.
+
+The user is responsible for synchronization using the SYCL queue or the
+optional SYCL event.
+
+This function is only avaiable on Embree versions with enabled SYCL
+support.
+
+#### EXIT STATUS {#exit-status}
+
+On failure an error code is set that can be queried using
+`rtcGetDeviceError`.
+
+#### SEE ALSO {#see-also}
+
+[rtcCommitBuffer] [rtcNewBufferHostDevice]
+
+```{=tex}
+
+```
+## RTCRay
 
 #### NAME {#name}
 
@@ -6943,8 +7774,7 @@ size.
 ```{=tex}
 
 ```
-RTCHit
-------
+## RTCHit
 
 #### NAME {#name}
 
@@ -6994,8 +7824,7 @@ packets of an arbitrary compile-time size.
 ```{=tex}
 
 ```
-RTCRayHit
----------
+## RTCRayHit
 
 #### NAME {#name}
 
@@ -7033,8 +7862,7 @@ packets of an arbitrary compile-time size.
 ```{=tex}
 
 ```
-RTCRayN
--------
+## RTCRayN
 
 #### NAME {#name}
 
@@ -7087,8 +7915,7 @@ packet (`i` argument).
 ```{=tex}
 
 ```
-RTCHitN
--------
+## RTCHitN
 
 #### NAME {#name}
 
@@ -7137,8 +7964,7 @@ component (e.g. x component of `Ng`) of the the i-th hit of the packet
 ```{=tex}
 
 ```
-RTCRayHitN
-----------
+## RTCRayHitN
 
 #### NAME {#name}
 
@@ -7177,8 +8003,7 @@ parts of the structure.
 ```{=tex}
 
 ```
-RTCFeatureFlags
----------------
+## RTCFeatureFlags
 
 #### NAME {#name}
 
@@ -7269,137 +8094,134 @@ enabled (`RTC_FEATURE_FLAG_ALL`) can just be kept.
 
 The following features can get enabled using feature flags:
 
--   RTC\_FEATURE\_FLAG\_MOTION\_BLUR: Enables motion blur for all
-    geometry types.
+-   RTC_FEATURE_FLAG_MOTION_BLUR: Enables motion blur for all geometry
+    types.
 
--   RTC\_FEATURE\_FLAG\_TRIANGLE: Enables triangle geometries
-    (RTC\_GEOMETRY\_TYPE\_TRIANGLE).
+-   RTC_FEATURE_FLAG_TRIANGLE: Enables triangle geometries
+    (RTC_GEOMETRY_TYPE_TRIANGLE).
 
--   RTC\_FEATURE\_FLAG\_QUAD: Enables quad geometries
-    (RTC\_GEOMETRY\_TYPE\_QUAD).
+-   RTC_FEATURE_FLAG_QUAD: Enables quad geometries
+    (RTC_GEOMETRY_TYPE_QUAD).
 
--   RTC\_FEATURE\_FLAG\_GRID: Enables grid geometries
-    (RTC\_GEOMETRY\_TYPE\_GRID).
+-   RTC_FEATURE_FLAG_GRID: Enables grid geometries
+    (RTC_GEOMETRY_TYPE_GRID).
 
--   RTC\_FEATURE\_FLAG\_SUBDIVISION: Enables subdivision geometries
-    (RTC\_GEOMETRY\_TYPE\_SUBDIVISION).
+-   RTC_FEATURE_FLAG_SUBDIVISION: Enables subdivision geometries
+    (RTC_GEOMETRY_TYPE_SUBDIVISION).
 
--   RTC\_FEATURE\_FLAG\_POINT: Enables all point geometry types
-    (RTC\_GEOMETRY\_TYPE\_XXX\_POINT)
+-   RTC_FEATURE_FLAG_POINT: Enables all point geometry types
+    (RTC_GEOMETRY_TYPE_XXX_POINT)
 
--   RTC\_FEATURE\_FLAG\_CURVES: Enables all curve geometry types
-    (RTC\_GEOMETRY\_TYPE\_XXX\_YYY\_CURVE)
+-   RTC_FEATURE_FLAG_CURVES: Enables all curve geometry types
+    (RTC_GEOMETRY_TYPE_XXX_YYY_CURVE)
 
--   RTC\_FEATURE\_FLAG\_ROUND\_CURVES: Enables all round curves
-    (RTC\_GEOMETRY\_TYPE\_ROUND\_XXX\_CURVE).
+-   RTC_FEATURE_FLAG_ROUND_CURVES: Enables all round curves
+    (RTC_GEOMETRY_TYPE_ROUND_XXX_CURVE).
 
--   RTC\_FEATURE\_FLAG\_FLAT\_CURVES: Enables all flat curves
-    (RTC\_GEOMETRY\_TYPE\_FLAT\_XXX\_CURVE).
+-   RTC_FEATURE_FLAG_FLAT_CURVES: Enables all flat curves
+    (RTC_GEOMETRY_TYPE_FLAT_XXX_CURVE).
 
--   RTC\_FEATURE\_FLAG\_NORMAL\_ORIENTED\_CURVES: Enables all normal
-    oriented curves
-    (RTC\_GEOMETRY\_TYPE\_NORMAL\_ORIENTED\_XXX\_CURVE).
+-   RTC_FEATURE_FLAG_NORMAL_ORIENTED_CURVES: Enables all normal
+    oriented curves (RTC_GEOMETRY_TYPE_NORMAL_ORIENTED_XXX_CURVE).
 
--   RTC\_FEATURE\_FLAG\_LINEAR\_CURVES: Enables all linear curves
-    (RTC\_GEOMETRY\_TYPE\_XXX\_LINEAR\_CURVE).
+-   RTC_FEATURE_FLAG_LINEAR_CURVES: Enables all linear curves
+    (RTC_GEOMETRY_TYPE_XXX_LINEAR_CURVE).
 
--   RTC\_FEATURE\_FLAG\_BEZIER\_CURVES: Enables all Bézier curves
-    (RTC\_GEOMETRY\_TYPE\_XXX\_BEZIER\_CURVE).
+-   RTC_FEATURE_FLAG_BEZIER_CURVES: Enables all Bézier curves
+    (RTC_GEOMETRY_TYPE_XXX_BEZIER_CURVE).
 
--   RTC\_FEATURE\_FLAG\_BSPLINE\_CURVES: Enables all B-spline curves
-    (RTC\_GEOMETRY\_TYPE\_XXX\_BSPLINE\_CURVE).
+-   RTC_FEATURE_FLAG_BSPLINE_CURVES: Enables all B-spline curves
+    (RTC_GEOMETRY_TYPE_XXX_BSPLINE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_HERMITE\_CURVES: Enables all Hermite curves
-    (RTC\_GEOMETRY\_TYPE\_XXX\_HERMITE\_CURVE).
+-   RTC_FEATURE_FLAG_HERMITE_CURVES: Enables all Hermite curves
+    (RTC_GEOMETRY_TYPE_XXX_HERMITE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_CONE\_LINEAR\_CURVE: Enables cone geometry type
-    (RTC\_GEOMETRY\_TYPE\_CONE\_LINEAR\_CURVE).
+-   RTC_FEATURE_FLAG_CONE_LINEAR_CURVE: Enables cone geometry type
+    (RTC_GEOMETRY_TYPE_CONE_LINEAR_CURVE).
 
--   RTC\_FEATURE\_FLAG\_ROUND\_LINEAR\_CURVE: Enables round linear
-    curves (RTC\_GEOMETRY\_TYPE\_ROUND\_LINEAR\_CURVE).
+-   RTC_FEATURE_FLAG_ROUND_LINEAR_CURVE: Enables round linear curves
+    (RTC_GEOMETRY_TYPE_ROUND_LINEAR_CURVE).
 
--   RTC\_FEATURE\_FLAG\_FLAT\_LINEAR\_CURVE: Enables flat linear curves
-    (RTC\_GEOMETRY\_TYPE\_FLAT\_LINEAR\_CURVE).
+-   RTC_FEATURE_FLAG_FLAT_LINEAR_CURVE: Enables flat linear curves
+    (RTC_GEOMETRY_TYPE_FLAT_LINEAR_CURVE).
 
--   RTC\_FEATURE\_FLAG\_ROUND\_BEZIER\_CURVE: Enables round Bézier
-    curves (RTC\_GEOMETRY\_TYPE\_ROUND\_BEZIER\_CURVE).
+-   RTC_FEATURE_FLAG_ROUND_BEZIER_CURVE: Enables round Bézier curves
+    (RTC_GEOMETRY_TYPE_ROUND_BEZIER_CURVE).
 
--   RTC\_FEATURE\_FLAG\_FLAT\_BEZIER\_CURVE: Enables flat Bézier curves
-    (RTC\_GEOMETRY\_TYPE\_FLAT\_BEZIER\_CURVE).
+-   RTC_FEATURE_FLAG_FLAT_BEZIER_CURVE: Enables flat Bézier curves
+    (RTC_GEOMETRY_TYPE_FLAT_BEZIER_CURVE).
 
--   RTC\_FEATURE\_FLAG\_NORMAL\_ORIENTED\_BEZIER\_CURVE: Enables normal
+-   RTC_FEATURE_FLAG_NORMAL_ORIENTED_BEZIER_CURVE: Enables normal
     oriented Bézier curves
-    (RTC\_GEOMETRY\_TYPE\_NORMAL\_ORIENTED\_BEZIER\_CURVE).
+    (RTC_GEOMETRY_TYPE_NORMAL_ORIENTED_BEZIER_CURVE).
 
--   RTC\_FEATURE\_FLAG\_ROUND\_BSPLINE\_CURVE: Enables round B-spline
-    curves (RTC\_GEOMETRY\_TYPE\_ROUND\_BSPLINE\_CURVE).
+-   RTC_FEATURE_FLAG_ROUND_BSPLINE_CURVE: Enables round B-spline curves
+    (RTC_GEOMETRY_TYPE_ROUND_BSPLINE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_FLAT\_BSPLINE\_CURVE: Enables flat B-spline
-    curves (RTC\_GEOMETRY\_TYPE\_FLAT\_BSPLINE\_CURVE).
+-   RTC_FEATURE_FLAG_FLAT_BSPLINE_CURVE: Enables flat B-spline curves
+    (RTC_GEOMETRY_TYPE_FLAT_BSPLINE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_NORMAL\_ORIENTED\_BSPLINE\_CURVE: Enables
-    normal oriented B-spline curves
-    (RTC\_GEOMETRY\_TYPE\_NORMAL\_ORIENTED\_BSPLINE\_CURVE).
+-   RTC_FEATURE_FLAG_NORMAL_ORIENTED_BSPLINE_CURVE: Enables normal
+    oriented B-spline curves
+    (RTC_GEOMETRY_TYPE_NORMAL_ORIENTED_BSPLINE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_ROUND\_HERMITE\_CURVE: Enables round Hermite
-    curves (RTC\_GEOMETRY\_TYPE\_ROUND\_HERMITE\_CURVE).
+-   RTC_FEATURE_FLAG_ROUND_HERMITE_CURVE: Enables round Hermite curves
+    (RTC_GEOMETRY_TYPE_ROUND_HERMITE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_FLAT\_HERMITE\_CURVE: Enables flat Hermite
-    curves (RTC\_GEOMETRY\_TYPE\_FLAT\_HERMITE\_CURVE).
+-   RTC_FEATURE_FLAG_FLAT_HERMITE_CURVE: Enables flat Hermite curves
+    (RTC_GEOMETRY_TYPE_FLAT_HERMITE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_NORMAL\_ORIENTED\_HERMITE\_CURVE: Enables
-    normal oriented Hermite curves
-    (RTC\_GEOMETRY\_TYPE\_NORMAL\_ORIENTED\_HERMITE\_CURVE).
+-   RTC_FEATURE_FLAG_NORMAL_ORIENTED_HERMITE_CURVE: Enables normal
+    oriented Hermite curves
+    (RTC_GEOMETRY_TYPE_NORMAL_ORIENTED_HERMITE_CURVE).
 
--   RTC\_FEATURE\_FLAG\_ROUND\_CATMULL\_ROM\_CURVE: Enables round
-    Catmull Rom curves
-    (RTC\_GEOMETRY\_TYPE\_ROUND\_CATMULL\_ROM\_CURVE).
+-   RTC_FEATURE_FLAG_ROUND_CATMULL_ROM_CURVE: Enables round Catmull Rom
+    curves (RTC_GEOMETRY_TYPE_ROUND_CATMULL_ROM_CURVE).
 
--   RTC\_FEATURE\_FLAG\_FLAT\_CATMULL\_ROM\_CURVE: Enables flat Catmull
-    Rom curves (RTC\_GEOMETRY\_TYPE\_FLAT\_CATMULL\_ROM\_CURVE).
+-   RTC_FEATURE_FLAG_FLAT_CATMULL_ROM_CURVE: Enables flat Catmull Rom
+    curves (RTC_GEOMETRY_TYPE_FLAT_CATMULL_ROM_CURVE).
 
--   RTC\_FEATURE\_FLAG\_NORMAL\_ORIENTED\_CATMULL\_ROM\_CURVE: Enables
-    normal oriented Catmull Rom curves
-    (RTC\_GEOMETRY\_TYPE\_NORMAL\_ORIENTED\_CATMULL\_ROM\_CURVE).
+-   RTC_FEATURE_FLAG_NORMAL_ORIENTED_CATMULL_ROM_CURVE: Enables normal
+    oriented Catmull Rom curves
+    (RTC_GEOMETRY_TYPE_NORMAL_ORIENTED_CATMULL_ROM_CURVE).
 
--   RTC\_FEATURE\_FLAG\_SPHERE\_POINT: Enables sphere geometry type
-    (RTC\_GEOMETRY\_TYPE\_SPHERE\_POINT).
+-   RTC_FEATURE_FLAG_SPHERE_POINT: Enables sphere geometry type
+    (RTC_GEOMETRY_TYPE_SPHERE_POINT).
 
--   RTC\_FEATURE\_FLAG\_DISC\_POINT: Enables disc geometry type
-    (RTC\_GEOMETRY\_TYPE\_DISC\_POINT).
+-   RTC_FEATURE_FLAG_DISC_POINT: Enables disc geometry type
+    (RTC_GEOMETRY_TYPE_DISC_POINT).
 
--   RTC\_FEATURE\_FLAG\_ORIENTED\_DISC\_POINT: Enables oriented disc
-    geometry types (RTC\_GEOMETRY\_TYPE\_ORIENTED\_DISC\_POINT).
+-   RTC_FEATURE_FLAG_ORIENTED_DISC_POINT: Enables oriented disc
+    geometry types (RTC_GEOMETRY_TYPE_ORIENTED_DISC_POINT).
 
--   RTC\_FEATURE\_FLAG\_INSTANCE: Enables instance geometries
-    (RTC\_GEOMETRY\_TYPE\_INSTANCE).
+-   RTC_FEATURE_FLAG_INSTANCE: Enables instance geometries
+    (RTC_GEOMETRY_TYPE_INSTANCE).
 
--   RTC\_FEATURE\_FLAG\_FILTER\_FUNCTION\_IN\_ARGUMENTS: Enables filter
+-   RTC_FEATURE_FLAG_FILTER_FUNCTION_IN_ARGUMENTS: Enables filter
     functions passed through intersect arguments.
 
--   RTC\_FEATURE\_FLAG\_FILTER\_FUNCTION\_IN\_GEOMETRY: Enable filter
+-   RTC_FEATURE_FLAG_FILTER_FUNCTION_IN_GEOMETRY: Enable filter
     functions passed through geometry.
 
--   RTC\_FEATURE\_FLAG\_FILTER\_FUNCTION: Enables filter functions
+-   RTC_FEATURE_FLAG_FILTER_FUNCTION: Enables filter functions
     (argument and geometry version).
 
--   RTC\_FEATURE\_FLAG\_USER\_GEOMETRY\_CALLBACK\_IN\_ARGUMENTS:
-    Enables RTC\_GEOMETRY\_TYPE\_USER with function pointer passed
-    through intersect arguments.
+-   RTC_FEATURE_FLAG_USER_GEOMETRY_CALLBACK_IN_ARGUMENTS: Enables
+    RTC_GEOMETRY_TYPE_USER with function pointer passed through
+    intersect arguments.
 
--   RTC\_FEATURE\_FLAG\_USER\_GEOMETRY\_CALLBACK\_IN\_GEOMETRY: Enables
-    RTC\_GEOMETRY\_TYPE\_USER with function pointer passed through
+-   RTC_FEATURE_FLAG_USER_GEOMETRY_CALLBACK_IN_GEOMETRY: Enables
+    RTC_GEOMETRY_TYPE_USER with function pointer passed through
     geometry object.
 
--   RTC\_FEATURE\_FLAG\_USER\_GEOMETRY: Enables
-    RTC\_GEOMETRY\_TYPE\_USER geometries (both argument and geometry
-    callback versions).
+-   RTC_FEATURE_FLAG_USER_GEOMETRY: Enables RTC_GEOMETRY_TYPE_USER
+    geometries (both argument and geometry callback versions).
 
--   RTC\_FEATURE\_FLAG\_32\_BIT\_RAY\_MASK: Enables full 32 bit ray
-    masks. If not used, only the lower 7 bits in the ray mask are
-    handled correctly.
+-   RTC_FEATURE_FLAG_32_BIT_RAY_MASK: Enables full 32 bit ray masks. If
+    not used, only the lower 7 bits in the ray mask are handled
+    correctly.
 
--   RTC\_FEATURE\_FLAG\_ALL: Enables all features (default).
+-   RTC_FEATURE_FLAG_ALL: Enables all features (default).
 
 #### EXIT STATUS {#exit-status}
 
@@ -7411,8 +8233,7 @@ The following features can get enabled using feature flags:
 ```{=tex}
 
 ```
-rtcInitIntersectArguments
--------------------------
+## rtcInitIntersectArguments
 
 #### NAME {#name}
 
@@ -7508,14 +8329,13 @@ No error code is set by this function.
 #### SEE ALSO {#see-also}
 
 [rtcIntersect1], [rtcIntersect4/8/16], [RTCFeatureFlags],
-[rtcInitRayQueryContext], [RTC\_GEOMETRY\_TYPE\_USER],
+[rtcInitRayQueryContext], [RTC_GEOMETRY_TYPE_USER],
 [rtcSetGeometryMaxRadiusScale]
 
 ```{=tex}
 
 ```
-rtcInitOccludedArguments
-------------------------
+## rtcInitOccludedArguments
 
 #### NAME {#name}
 
@@ -7611,14 +8431,13 @@ No error code is set by this function.
 #### SEE ALSO {#see-also}
 
 [rtcOccluded1], [rtcOccluded4/8/16], [RTCFeatureFlags],
-[rtcInitRayQueryContext], [RTC\_GEOMETRY\_TYPE\_USER],
+[rtcInitRayQueryContext], [RTC_GEOMETRY_TYPE_USER],
 [rtcSetGeometryMaxRadiusScale]
 
 ```{=tex}
 
 ```
-rtcInitRayQueryContext
-----------------------
+## rtcInitRayQueryContext
 
 #### NAME {#name}
 
@@ -7671,8 +8490,7 @@ No error code is set by this function.
 ```{=tex}
 
 ```
-rtcIntersect1
--------------
+## rtcIntersect1
 
 #### NAME {#name}
 
@@ -7755,8 +8573,44 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcOccluded1
-------------
+## rtcTraversableIntersect1
+
+#### NAME {#name}
+
+    rtcTraversableIntersect1 - finds the closest hit for a single ray
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableIntersect1(
+      RTCTraversable traversable,
+      struct RTCRayHit* rayhit
+      struct RTCIntersectArguments* args = NULL
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversableIntersect` function is equivalent to `rtcIntersect1`
+but takes traversable object (`traversable` argument) instead of a
+scene object. Using this method is optional on CPU but it is required
+for SYCL.
+
+For more details, refer to the documentation of `rtcIntersect1`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcIntersect1], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcOccluded1
 
 #### NAME {#name}
 
@@ -7817,8 +8671,44 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcIntersect4/8/16
-------------------
+## rtcTraversableOccluded1
+
+#### NAME {#name}
+
+    rtcTraversableOccluded1 - finds any hit for a single ray
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableOccluded1(
+      RTCTraversable traversable,
+      struct RTCRay* ray,
+      struct RTCOccludedArguments* args = NULL
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversableOccluded1` function is equivalent to `rtcOccluded1`
+but takes traversable object (`traversable` argument) instead of a
+scene object. Using this method is optional on CPU but it is required
+for SYCL.
+
+For more details, refer to the documentation of `rtcOccluded1`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcOccluded1], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcIntersect4/8/16
 
 #### NAME {#name}
 
@@ -7895,8 +8785,58 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcOccluded4/8/16
------------------
+## rtcTraversableIntersect4/8/16
+
+#### NAME {#name}
+
+    rtcTravesableIntersect4/8/16 - finds the closest hits for a ray packet
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableIntersect4(
+      const int* valid,
+      RTCTraversable traversable,
+      struct RTCRayHit4* rayhit,
+      struct RTCIntersectArguments* args = NULL
+    );
+
+    void rtcTraversableIntersect8(
+      const int* valid,
+      RTCTraversable traversable,
+      struct RTCRayHit8* rayhit,
+      struct RTCIntersectArguments* args = NULL
+    );
+
+    void rtcTraversableIntersect16(
+      const int* valid,
+      RTCTraversable traversable,
+      struct RTCRayHit16* rayhit,
+      struct RTCIntersectArguments* args = NULL
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversableIntersect4/8/16` functions are equivalent to
+`rtcIntersect4/8/16` but take a traversable object (`traversable`
+argument) instead of a scene object.
+
+For more details, refer to the documentation of `rtcIntersect4/8/16`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcIntersect4/8/16], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcOccluded4/8/16
 
 #### NAME {#name}
 
@@ -7973,12 +8913,62 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcForwardIntersect1
---------------------
+## rtcTraversableOccluded4/8/16
 
 #### NAME {#name}
 
-    rtcForwardIntersect1 - forwards a single ray to new scene
+    rtcTraversableOccluded4/8/16 - finds any hits for a ray packet
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableOccluded4(
+      const int* valid,
+      RTCTraversable traversable,
+      struct RTCRay4* ray,
+      struct RTCOccludedArguments* args = NULL
+    );
+
+    void rtcTraversableOccluded8(
+      const int* valid,
+      RTCTraversable traversable,
+      struct RTCRay8* ray,
+      struct RTCOccludedArguments* args = NULL
+    );
+
+    void rtcTraversableOccluded16(
+      const int* valid,
+      RTCTraversable traversable,
+      struct RTCRay16* ray,
+      struct RTCOccludedArguments* args = NULL
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversableOccluded4/8/16` functions are equivalent to
+`rtcOccluded4/8/16` but take a traversable object (`traversable`
+argument) instead of a scene object.
+
+For more details, refer to the documentation of `rtcOccluded4/8/16`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcOccluded4/8/16], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcForwardIntersect1
+
+#### NAME {#name}
+
+    rtcForwardIntersect1/Ex - forwards a single ray to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -7992,16 +8982,25 @@ rtcForwardIntersect1
       unsigned int instID
     );
 
+    void rtcForwardIntersect1Ex(
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay* ray,
+      unsigned int instID,
+      unsigned int instPrimID,
+    );
+
 #### DESCRIPTION {#description}
 
-The `rtcForwardIntersect1` function forwards the traversal of a
-transformed ray (`ray` argument) into a scene (`scene` argument) from a
-user geometry callback. The function can only get invoked from a user
-geometry callback for a ray traversal initiated with the
-`rtcIntersect1` function. The callback arguments structure of the
-callback invokation has to get passed to the ray forwarding (`args`
-argument). The user geometry callback should instantly terminate after
-invoking the `rtcForwardIntersect1` function.
+The `rtcForwardIntersect1` and `rtcForwardIntersect1Ex` functions
+forward the traversal of a transformed ray (`ray` argument) into a
+scene (`scene` argument) from a user geometry callback. The function
+can only get invoked from a user geometry callback for a ray traversal
+initiated with the `rtcIntersect1` function. The callback arguments
+structure of the callback invokation has to get passed to the ray
+forwarding (`args` argument). The user geometry callback should
+instantly terminate after invoking the `rtcForwardIntersect1/Ex`
+function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8017,10 +9016,15 @@ This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
 
+For user defined instance arrays, the `rtcForwardIntersect1Ex` variant
+has an additional `instPrimID` argument which is pushed to the instance
+primitive ID stack. Instance primitive IDs identify which instance of
+an instance array was hit.
+
 When using Embree on the CPU it is possible to recursively invoke
 `rtcIntersect1` directly from a user geometry callback. However, when
 SYCL is used, recursively tracing rays is not directly supported, and
-the `rtcForwardIntersect1` function must be used.
+the `rtcForwardIntersect1/Ex` functions must be used.
 
 The ray structure must be aligned to 16 bytes.
 
@@ -8036,12 +9040,60 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcForwardOccluded1
--------------------
+## rtcTraversableForwardIntersect1
 
 #### NAME {#name}
 
-    rtcForwardOccluded1 - forwards a single ray to new scene
+    rtcTraversableForwardIntersect1/Ex - forwards a single ray to new scene
+      from user geometry callback
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableForwardIntersect1(
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardIntersect1Ex(
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay* ray,
+      unsigned int instID,
+      unsigned int instPrimID,
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversalbeForwardIntersect1` and
+`rtcTraversableForwardIntersect1Ex` functions are equivalent to
+`rtcForwardIntersect1` and `rtcForwardIntersect1Ex` respectively but
+take a traversable object (`traversable` argument) instead of a scene
+object.
+
+For more details, refer to the documentation of
+`rtcForwardIntersect1/Ex`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcForwardIntersect1], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcForwardOccluded1
+
+#### NAME {#name}
+
+    rtcForwardOccluded1/Ex - forwards a single ray to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -8055,16 +9107,24 @@ rtcForwardOccluded1
       unsigned int instID
     );
 
+    void rtcForwardOccluded1Ex(
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
 #### DESCRIPTION {#description}
 
-The `rtcForwardOccluded1` function forwards the traversal of a
-transformed ray (`ray` argument) into a scene (`scene` argument) from a
-user geometry callback. The function can only get invoked from a user
-geometry callback for a ray traversal initiated with the `rtcOccluded1`
-function. The callback arguments structure of the callback invokation
-has to get passed to the ray forwarding (`args` argument). The user
-geometry callback should instantly terminate after invoking the
-`rtcForwardOccluded1` function.
+The `rtcForwardOccluded1` and `rtcForwardOccluded1Ex` functions forward
+the traversal of a transformed ray (`ray` argument) into a scene
+(`scene` argument) from a user geometry callback. The function can only
+get invoked from a user geometry callback for a ray traversal initiated
+with the `rtcOccluded1` function. The callback arguments structure of
+the callback invokation has to get passed to the ray forwarding (`args`
+argument). The user geometry callback should instantly terminate after
+invoking the `rtcForwardOccluded1/Ex` function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8080,10 +9140,15 @@ This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
 
+For user defined instance arrays, the `rtcForwardIntersect1Ex` variant
+has an additional `instPrimID` argument which is pushed to the instance
+primitive ID stack. Instance primitive IDs identify which instance of
+an instance array was hit.
+
 When using Embree on the CPU it is possible to recursively invoke
 `rtcOccluded1` directly from a user geometry callback. However, when
 SYCL is used, recursively tracing rays is not directly supported, and
-the `rtcForwardOccluded1` function must be used.
+the `rtcForwardOccluded1/Ex` function must be used.
 
 The ray structure must be aligned to 16 bytes.
 
@@ -8099,12 +9164,60 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcForwardIntersect4/8/16
--------------------------
+## rtcTraversableForwardOccluded1
 
 #### NAME {#name}
 
-    rtcForwardIntersect4/8/16 - forwards a ray packet to new scene
+    rtcTraversableForwardOccluded1/Ex - forwards a single ray to new scene
+      from user geometry callback
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableForwardOccluded1(
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardOccluded1Ex(
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay* ray,
+      unsigned int instID,
+      unsigned int instPrimID,
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversalbeForwardOccluded1` and
+`rtcTraversableForwardOccluded1Ex` functions are equivalent to
+`rtcForwardOccluded1` and `rtcForwardOccluded1Ex` respectively but take
+a traversable object (`traversable` argument) instead of a scene
+object.
+
+For more details, refer to the documentation of
+`rtcForwardOccluded1/Ex`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcForwardOccluded1], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcForwardIntersect4/8/16
+
+#### NAME {#name}
+
+    rtcForwardIntersect4/8/16/Ex - forwards a ray packet to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -8119,11 +9232,11 @@ rtcForwardIntersect4/8/16
       unsigned int instID
     );
 
-    void rtcForwardIntersect4(
+    void rtcForwardIntersect8(
       void int* valid,
       const struct RTCIntersectFunctionNArguments* args,
       RTCScene scene,
-      struct RTCRay4* ray,
+      struct RTCRay8* ray,
       unsigned int instID
     );
 
@@ -8132,19 +9245,48 @@ rtcForwardIntersect4/8/16
       const struct RTCIntersectFunctionNArguments* args,
       RTCScene scene,
       struct RTCRay16* ray,
-      unsigned int instID
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardIntersect4Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay4* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardIntersect8Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay8* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardIntersect16Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
     );
 
 #### DESCRIPTION {#description}
 
-The `rtcForwardIntersect4/8/16` functions forward the traversal of a
-transformed ray packet (`ray` argument) into a scene (`scene` argument)
-from a user geometry callback. The function can only get invoked from a
-user geometry callback for a ray traversal initiated with the
-`rtcIntersect4/8/16` function. The callback arguments structure of the
-callback invokation has to get passed to the ray forwarding (`args`
-argument). The user geometry callback should instantly terminate after
-invoking the `rtcForwardIntersect4/8/16` function.
+The `rtcForwardIntersect4/8/16` and `rtcForwardIntersect4/8/16Ex`
+functions forward the traversal of a transformed ray packet (`ray`
+argument) into a scene (`scene` argument) from a user geometry
+callback. The function can only get invoked from a user geometry
+callback for a ray traversal initiated with the `rtcIntersect4/8/16`
+function. The callback arguments structure of the callback invokation
+has to get passed to the ray forwarding (`args` argument). The user
+geometry callback should instantly terminate after invoking the
+`rtcForwardIntersect4/8/16/Ex` function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8159,6 +9301,11 @@ the original `rtcIntersect4/8/16` invokation.
 This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
+
+For user defined instance arrays, the `rtcForwardIntersect4/8/16Ex`
+variant has an additional `instPrimID` argument which is pushed to the
+instance primitive ID stack. Instance primitive IDs identify which
+instance of an instance array was hit.
 
 When using Embree on the CPU it is possible to recursively invoke
 `rtcIntersect4/8/16` directly from a user geometry callback. However,
@@ -8181,12 +9328,95 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcForwardOccluded4/8/16
-------------------------
+## rtcTraversableForwardIntersect4/8/16
 
 #### NAME {#name}
 
-    rtcForwardOccluded4/8/16 - forwards a ray packet to new scene
+    rtcTraversableForwardIntersect4/8/16/Ex - forwards a ray packet to new scene
+      from user geometry callback
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableForwardIntersect4(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay4* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardIntersect8(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay8* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardIntersect16(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcTraversableForwardIntersect4Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay4* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcTraversableForwardIntersect8Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay8* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcTraversableForwardIntersect16Ex(
+      void int* valid,
+      const struct RTCIntersectFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversableForwardIntersect4/8/16/Ex` functions are equivalent
+to `rtcForwardIntersect4/8/16/Ex` but take a traversable object
+(`traversable` argument) instead of a scene object.
+
+For more details, refer to the documentation of
+`rtcForwardIntersect4/8/16/Ex`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcForwardIntersect4/8/16/Ex], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcForwardOccluded4/8/16
+
+#### NAME {#name}
+
+    rtcForwardOccluded4/8/16/Ex - forwards a ray packet to new scene
       from user geometry callback
 
 #### SYNOPSIS {#synopsis}
@@ -8201,11 +9431,11 @@ rtcForwardOccluded4/8/16
       unsigned int instID
     );
 
-    void rtcForwardOccluded4(
+    void rtcForwardOccluded8(
       void int* valid,
       const struct RTCOccludedFunctionNArguments* args,
       RTCScene scene,
-      struct RTCRay4* ray,
+      struct RTCRay8* ray,
       unsigned int instID
     );
 
@@ -8217,16 +9447,44 @@ rtcForwardOccluded4/8/16
       unsigned int instID
     );
 
+    void rtcForwardOccluded4Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay4* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardOccluded8Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay8* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcForwardOccluded16Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCScene scene,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
 #### DESCRIPTION {#description}
 
-The `rtcForwardOccluded4/8/16` functions forward the traversal of a
-transformed ray packet (`ray` argument) into a scene (`scene` argument)
-from a user geometry callback. The function can only get invoked from a
-user geometry callback for a ray traversal initiated with the
-`rtcOccluded4/8/16` function. The callback arguments structure of the
-callback invokation has to get passed to the ray forwarding (`args`
-argument). The user geometry callback should instantly terminate after
-invoking the `rtcForwardOccluded4/8/16` function.
+The `rtcForwardOccluded4/8/16` and `rtcForwardOccluded4/8/16Ex`
+functions forward the traversal of a transformed ray packet (`ray`
+argument) into a scene (`scene` argument) from a user geometry
+callback. The function can only get invoked from a user geometry
+callback for a ray traversal initiated with the `rtcOccluded4/8/16`
+function. The callback arguments structure of the callback invokation
+has to get passed to the ray forwarding (`args` argument). The user
+geometry callback should instantly terminate after invoking the
+`rtcForwardOccluded4/8/16/Ex` function.
 
 Only the ray origin and ray direction members of the ray argument are
 used for forwarding, all additional ray properties are inherited from
@@ -8241,6 +9499,11 @@ original `rtcOccluded4/8/16` invokation.
 This function can get used to implement user defined instancing using
 user geometries, e.g. by transforming the ray in a special way, and/or
 selecting between different scenes to instantiate.
+
+For user defined instance arrays, the `rtcForwardIntersect4/8/16Ex`
+variant has an additional `instPrimID` argument which is pushed to the
+instance primitive ID stack. Instance primitive IDs identify which
+instance of an instance array was hit.
 
 When using Embree on the CPU it is possible to recursively invoke
 `rtcOccluded4/8/16` directly from a user geometry callback. However,
@@ -8263,8 +9526,90 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcInitPointQueryContext
-------------------------
+## rtcTraversableForwardOccluded4/8/16
+
+#### NAME {#name}
+
+    rtcTraversableForwardOccluded4/8/16/Ex - forwards a ray packet to new scene
+      from user geometry callback
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversableForwardOccluded4(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay4* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardOccluded8(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay8* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardOccluded16(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay16* ray,
+      unsigned int instID
+    );
+
+    void rtcTraversableForwardOccluded4Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay4* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcTraversableForwardOccluded8Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay8* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+    void rtcTraversableForwardOccluded16Ex(
+      void int* valid,
+      const struct RTCOccludedFunctionNArguments* args,
+      RTCTraversable traversable,
+      struct RTCRay16* ray,
+      unsigned int instID,
+      unsigned int instPrimID
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversableForwardOccluded4/8/16/Ex` functions are equivalent
+to `rtcForwardOccluded4/8/16/Ex` but take a traversable object
+(`traversable` argument) instead of a scene object.
+
+For more details, refer to the documentation of
+`rtcForwardOccluded4/8/16/Ex`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcForwardOccluded4/8/16/Ex], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcInitPointQueryContext
 
 #### NAME {#name}
 
@@ -8300,7 +9645,7 @@ A stack (`RTCPointQueryContext` type) which stores the IDs and instance
 transformations during a BVH traversal for a point query. The
 transformations are assumed to be affine transformations (3×3 matrix
 plus translation) and therefore the last column is ignored (see
-[RTC\_GEOMETRY\_TYPE\_INSTANCE] for details).
+[RTC_GEOMETRY_TYPE_INSTANCE] for details).
 
 The `rtcInitPointContext` function initializes the context to default
 values and should be called for initialization.
@@ -8326,8 +9671,7 @@ No error code is set by this function.
 ```{=tex}
 
 ```
-rtcPointQuery
--------------
+## rtcPointQuery
 
 #### NAME {#name}
 
@@ -8415,9 +9759,9 @@ The point query structure must be aligned to 16 bytes.
 #### SUPPORTED PRIMITIVES
 
 Currently, all primitive types are supported by the point query API
-except of points (see [RTC\_GEOMETRY\_TYPE\_POINT]), curves (see
-[RTC\_GEOMETRY\_TYPE\_CURVE]) and sudivision surfaces (see
-[RTC\_GEOMETRY\_SUBDIVISION]).
+except of points (see [RTC_GEOMETRY_TYPE_POINT]), curves (see
+[RTC_GEOMETRY_TYPE_CURVE]) and sudivision surfaces (see
+[RTC_GEOMETRY_SUBDIVISION]).
 
 #### EXIT STATUS {#exit-status}
 
@@ -8431,8 +9775,84 @@ thus will not set any error flags on failure.
 ```{=tex}
 
 ```
-rtcCollide
-----------
+## rtcTraversablePointQuery
+
+#### NAME {#name}
+
+    rtcTraversablePointQuery - traverses the BVH with a point query object
+
+#### SYNOPSIS {#synopsis}
+
+    #include <embree4/rtcore.h>
+
+    void rtcTraversablePointQuery(
+      RTCTraversable traversable,
+      struct RTCPointQuery* query,
+      struct RTCPointQueryContext* context,
+      struct RTCPointQueryFunction* queryFunc,
+      void* userPtr
+    );
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversablePointQuery` function is equivalent to
+`rtcPointQuery` but takes a traversable object (`traversable` argument)
+instead of a scene object.
+
+For more details, refer to the documentation of `rtcPointQuery`.
+
+#### EXIT STATUS {#exit-status}
+
+For performance reasons this function does not do any error checks,
+thus will not set any error flags on failure.
+
+#### SEE ALSO {#see-also}
+
+[rtcPointQuery], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcPointQuery4/8/16
+
+#### NAME {#name}
+
+    rtcPointQuery4/8/16 - traverses the BVH with a point query object for a ray packet
+
+#### DESCRIPTION {#description}
+
+The `rtcPointQuery4/8/16` function unrolls the ray packet internally
+and calls [rtcPointQuery].
+
+#### SEE ALSO {#see-also}
+
+[rtcPointQuery]
+
+```{=tex}
+
+```
+## rtcTraversablePointQuery4/8/16
+
+#### NAME {#name}
+
+    rtcTraversablePointQuery4/8/16 - traverses the BVH with a point query object for a ray packet
+
+#### DESCRIPTION {#description}
+
+The `rtcTraversablePointQuery4/8/16` functions are equivalent to
+`rtcPointQuery4/8/16` but take a traversable object (`traversable`
+argument) instead of a scene object.
+
+For more details, refer to the documentation of `rtcPointQuery4/8/16`.
+
+#### SEE ALSO {#see-also}
+
+[rtcPointQuery4/8/16], [rtcGetSceneTraversable]
+
+```{=tex}
+
+```
+## rtcCollide
 
 #### NAME {#name}
 
@@ -8480,7 +9900,7 @@ intersection query.
 #### SUPPORTED PRIMITIVES {#supported-primitives}
 
 Currently, the only supported type is the user geometry type (see
-[RTC\_GEOMETRY\_TYPE\_USER]).
+[RTC_GEOMETRY_TYPE_USER]).
 
 #### EXIT STATUS {#exit-status}
 
@@ -8492,8 +9912,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcNewBVH
----------
+## rtcNewBVH
 
 #### NAME {#name}
 
@@ -8528,8 +9947,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcRetainBVH
-------------
+## rtcRetainBVH
 
 #### NAME {#name}
 
@@ -8561,8 +9979,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcReleaseBVH
--------------
+## rtcReleaseBVH
 
 #### NAME {#name}
 
@@ -8592,8 +10009,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-rtcBuildBVH
------------
+## rtcBuildBVH
 
 #### NAME {#name}
 
@@ -8795,8 +10211,7 @@ On failure an error code is set that can be queried using
 ```{=tex}
 
 ```
-RTCQuaternionDecomposition
---------------------------
+## RTCQuaternionDecomposition
 
 #### NAME {#name}
 
@@ -8872,8 +10287,7 @@ No error code is set by this function.
 ```{=tex}
 
 ```
-rtcInitQuaternionDecomposition
-------------------------------
+## rtcInitQuaternionDecomposition
 
 #### NAME {#name}
 
@@ -8902,11 +10316,9 @@ No error code is set by this function.
 ```{=tex}
 
 ```
-CPU Performance Recommendations
-===============================
+# CPU Performance Recommendations
 
-MXCSR control and status register
----------------------------------
+## MXCSR control and status register
 
 It is strongly recommended to have the `Flush to Zero` and
 `Denormals are Zero` mode of the MXCSR control and status register
@@ -8928,8 +10340,7 @@ application main thread (before the creation of the
 If using a different tasking system, make sure each rendering thread
 has the proper mode set.
 
-Thread Creation and Affinity Settings
--------------------------------------
+## Thread Creation and Affinity Settings
 
 Tasking systems like TBB create worker threads on demand, which will
 add a runtime overhead for the very first `rtcCommitScene` call. In
@@ -8947,8 +10358,7 @@ Xeon Phi Processors where they are affinitized by default.
 All Embree tutorials automatically start and affinitize TBB worker
 threads by passing `start_threads=1,set_affinity=1` to `rtcNewDevice`.
 
-Fast Coherent Rays
-------------------
+## Fast Coherent Rays
 
 For getting the highest performance for highly coherent rays, e.g.
 primary or hard shadow rays, it is recommended to use packets with
@@ -8957,8 +10367,7 @@ setting the `RTC_RAY_QUERY_FLAG_COHERENT` flag in the
 `rtcIntersect`/`rtcOccluded` calls. The rays inside each packet should
 be grouped as coherent as possible.
 
-Huge Page Support
------------------
+## Huge Page Support
 
 It is recommended to use huge pages under Linux to increase rendering
 performance. Embree supports 2MB huge pages under Windows, Linux, and
@@ -9033,8 +10442,7 @@ When the system has been running for a while, physical memory gets
 quickly fragmented, and causes huge page allocations to fail. For this
 reason, huge pages are not very useful under macOS in practice.
 
-Avoid store-to-load forwarding issues with single rays
-------------------------------------------------------
+## Avoid store-to-load forwarding issues with single rays
 
 We recommend to use a single SSE store to set up the `org` and `tnear`
 components, and a single SSE store to set up the `dir` and `time`
@@ -9045,11 +10453,9 @@ is reading these components using SSE loads later on.
 ```{=tex}
 
 ```
-GPU Performance Recommendations
-===============================
+# GPU Performance Recommendations
 
-Low Code Complexity
--------------------
+## Low Code Complexity
 
 As a general rule try to keep code complexity low, to avoid spill code
 generation. To achieve this we recommend splitting your renderer into
@@ -9058,8 +10464,7 @@ separate kernels instead of using a single Uber kernel invokation.
 Code can further get reduced by using SYCL specialization constants to
 just enable rendering features required to render a given scene.
 
-Feature Flags
--------------
+## Feature Flags
 
 Use SYCL specialization constants and the feature flags (see section
 [RTCFeatureFlags]) of the `rtcIntersect1` and `rtcOccluded1` calls to
@@ -9068,8 +10473,7 @@ features required to render the current scene. If JIT compile times are
 an issue, reduce the number of feature masks used and use JIT caching
 (see section [SYCL JIT caching](#sycl-jit-caching)).
 
-Inline Indirect Calls
----------------------
+## Inline Indirect Calls
 
 Attaching user geometry and intersection filter callbacks to the
 geometries of the scene is not supported in SYCL for performance
@@ -9096,8 +10500,7 @@ Do *not* read a function pointer form some memory location and pass it
 to `rtcIntersect1` (and `rtcOccluded1`) as this will also prevent
 inlining.
 
-7 Bit Ray Mask
---------------
+## 7 Bit Ray Mask
 
 Use just the lower 7 bits of the ray and geometry mask if possible,
 even though Embree supports 32 bit ray masks for geometry masking. On
@@ -9106,11 +10509,10 @@ ray tracing hardware only supports an 8 bit mask, thus Embree has to
 emulate 32 bit masking if used. For that reason the lower 7 mask bits
 are hardware accelerated and fast, while the mask bits 7-31 require
 some software intervention and using them reduces performance. To turn
-on 32 bit ray masks use the RTC\_FEATURE\_FLAG\_32\_BIT\_RAY\_MASK (see
+on 32 bit ray masks use the RTC_FEATURE_FLAG_32_BIT_RAY_MASK (see
 section [RTCFeatureFlags]).
 
-Limit Motion Blur Motions
--------------------------
+## Limit Motion Blur Motions
 
 The motion blur implementation on SYCL has some limitations regarding
 supported motion. Primitive motion should be maximally as large as a
@@ -9120,8 +10522,7 @@ instance, and apply motion blur to the instance itself, which
 efficiently allows larger motions. As a fallback, problematic scenes
 can always still get rendered robustly on the CPU.
 
-Generic Pointers
-----------------
+## Generic Pointers
 
 Embree uses standard C++ pointers in its implementation. SYCL might not
 be able to detect the memory space these pointers refer to and has to
@@ -9146,9 +10547,9 @@ To work around this issue we recommend:
 
 -   Indirectly callable functions may still cause problems, even if
     your kernel does not use local memory. Thus best use SYCL pointers
-    like sycl::global\_ptr`<T>`{=html} and
-    sycl::private\_ptr`<T>`{=html} in indirectly callable functions to
-    avoid generic address space usage.
+    like sycl::global_ptr`<T>`{=html} and sycl::private_ptr`<T>`{=html}
+    in indirectly callable functions to avoid generic address space
+    usage.
 
 -   You can also enforce usage of global pointers using the following
     DPC++ compile flags:
@@ -9252,6 +10653,14 @@ There is no image output to keep the tutorial as simple as possible.
 
 [Source Code](https://github.com/embree/embree/blob/master/tutorials/minimal/minimal.cpp)
 
+Host Device Memory
+------------------
+
+This tutorial shows four different ways to use explicit host and device memory
+with SYCL.
+
+[Source Code](https://github.com/embree/embree/blob/master/tutorials/host_device_memory/host_device_memory_device.cpp)
+
 Triangle Geometry
 -----------------
 
@@ -9353,6 +10762,25 @@ hit sphere, to demonstrate how the same geometry instanced in different
 ways can be distinguished.
 
 [Source Code](https://github.com/embree/embree/blob/master/tutorials/instanced_geometry/instanced_geometry_device.cpp)
+
+Instance Array Geometry
+----------------------
+
+[![][imgForest]](https://github.com/embree/embree/blob/master/tutorials/forest/forest_device.cpp)
+
+This tutorial demonstrates the usage of instance arrays in Embree. Instance arrays
+are large collections of similar objects. Examples are sand dunes that consist
+of millions of instances of a few grain models or, like here, a forest consisting of
+many instances of a few tree models.
+
+In this application can switch between representing the scene with regular
+instances or (one!) instance array. It also prints several stats, that
+demonstrate the memory savings and faster BVH build times when using instance
+arrays for such scenes. Instance arrays come with a small overhead on CPU and
+should be preferred if memory consumption is more important than raytracing
+performance.
+
+[Source Code](https://github.com/embree/embree/blob/master/tutorials/forest/forest_device.cpp)
 
 Multi Level Instancing
 ----------------------
@@ -9595,6 +11023,7 @@ collecting the next N hits in a single ray query.
 [Stream Viewer]: #stream-viewer
 [User Geometry]: #user-geometry
 [Instanced Geometry]: #instanced-geometry
+[Instance Array Geometry]: #instance-array-geometry
 [Multi Level Instancing]: #multi-level-instancing
 [Intersection Filter]: #intersection-filter
 [Hair]: #hair
@@ -9614,6 +11043,7 @@ collecting the next N hits in a single ray query.
 [imgUserGeometry]: https://embree.github.io/images/user_geometry.jpg
 [imgViewer]: https://embree.github.io/images/viewer.jpg
 [imgInstancedGeometry]: https://embree.github.io/images/instanced_geometry.jpg
+[imgForest]: https://embree.github.io/images/forest.jpg
 [imgMultiLevelInstancing]: https://embree.github.io/images/multi_level_instancing.jpg
 [imgIntersectionFilter]: https://embree.github.io/images/intersection_filter.jpg
 [imgPathtracer]: https://embree.github.io/images/pathtracer.jpg

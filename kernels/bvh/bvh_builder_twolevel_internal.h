@@ -11,6 +11,7 @@
 #include "../geometry/quadi.h"
 #include "../geometry/object.h"
 #include "../geometry/instance.h"
+#include "../geometry/instance_array.h"
 
 namespace embree
 {
@@ -29,9 +30,12 @@ namespace embree
   DECLARE_ISA_FUNCTION(Builder*,BVH4VirtualMeshBuilderMortonGeneral,void* COMMA UserGeometry* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH4VirtualMeshBuilderSAH,void* COMMA UserGeometry* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH4VirtualMeshRefitSAH,void* COMMA UserGeometry* COMMA unsigned int COMMA size_t);
-  DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceMeshBuilderMortonGeneral,void* COMMA Instance* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t);
+  DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceMeshBuilderMortonGeneral,void* COMMA Instance* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceMeshBuilderSAH,void* COMMA Instance* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceMeshRefitSAH,void* COMMA Instance* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t)
+  DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceArrayMeshBuilderMortonGeneral,void* COMMA InstanceArray* COMMA unsigned int COMMA size_t);
+  DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceArrayMeshBuilderSAH,void* COMMA InstanceArray* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t);
+  DECLARE_ISA_FUNCTION(Builder*,BVH4InstanceArrayMeshRefitSAH,void* COMMA InstanceArray* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t)
   DECLARE_ISA_FUNCTION(Builder*,BVH8Triangle4MeshBuilderMortonGeneral,void* COMMA TriangleMesh* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH8Triangle4MeshBuilderSAH,void* COMMA TriangleMesh* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH8Triangle4MeshRefitSAH,void* COMMA TriangleMesh* COMMA unsigned int COMMA size_t);
@@ -47,9 +51,12 @@ namespace embree
   DECLARE_ISA_FUNCTION(Builder*,BVH8VirtualMeshBuilderMortonGeneral,void* COMMA UserGeometry* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH8VirtualMeshBuilderSAH,void* COMMA UserGeometry* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH8VirtualMeshRefitSAH,void* COMMA UserGeometry* COMMA unsigned int COMMA size_t); 
-  DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceMeshBuilderMortonGeneral,void* COMMA Instance* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t);
+  DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceMeshBuilderMortonGeneral,void* COMMA Instance* COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceMeshBuilderSAH,void* COMMA Instance* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t);
   DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceMeshRefitSAH,void* COMMA Instance* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t) 
+  DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceArrayMeshBuilderMortonGeneral,void* COMMA InstanceArray* COMMA unsigned int COMMA size_t);
+  DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceArrayMeshBuilderSAH,void* COMMA InstanceArray* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t);
+  DECLARE_ISA_FUNCTION(Builder*,BVH8InstanceArrayMeshRefitSAH,void* COMMA InstanceArray* COMMA Geometry::GTypeMask COMMA unsigned int COMMA size_t) 
   
   namespace isa
   {
@@ -86,7 +93,12 @@ namespace embree
       template<>
       struct MortonBuilder<4,Instance,InstancePrimitive> {
         MortonBuilder () {}
-        Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH4InstanceMeshBuilderMortonGeneral(bvh,mesh,gtype,geomID,0);}
+        Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask /*gtype*/) { return BVH4InstanceMeshBuilderMortonGeneral(bvh,mesh,geomID,0);}
+      };
+      template<>
+      struct MortonBuilder<4,InstanceArray,InstanceArrayPrimitive> {
+        MortonBuilder () {}
+        Builder* operator () (void* bvh, InstanceArray* mesh, size_t geomID, Geometry::GTypeMask /*gtype*/) { return BVH4InstanceArrayMeshBuilderMortonGeneral(bvh,mesh,geomID,0);}
       };
       template<>
       struct MortonBuilder<8,TriangleMesh,Triangle4> {
@@ -116,7 +128,12 @@ namespace embree
       template<>
       struct MortonBuilder<8,Instance,InstancePrimitive> {
         MortonBuilder () {}
-        Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH8InstanceMeshBuilderMortonGeneral(bvh,mesh,gtype,geomID,0);}
+        Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask /*gtype*/) { return BVH8InstanceMeshBuilderMortonGeneral(bvh, mesh, geomID, 0); }
+      };
+      template<>
+      struct MortonBuilder<8,InstanceArray,InstanceArrayPrimitive> {
+        MortonBuilder () {}
+        Builder* operator () (void* bvh, InstanceArray* mesh, size_t geomID, Geometry::GTypeMask /*gtype*/) { return BVH8InstanceArrayMeshBuilderMortonGeneral(bvh, mesh, geomID, 0); }
       };
 
       template<int N, typename Mesh, typename Primitive>
@@ -152,6 +169,11 @@ namespace embree
         Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH4InstanceMeshBuilderSAH(bvh,mesh,gtype,geomID,0);}
       };
       template<>
+      struct SAHBuilder<4,InstanceArray,InstanceArrayPrimitive> {
+        SAHBuilder () {}
+        Builder* operator () (void* bvh, InstanceArray* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH4InstanceArrayMeshBuilderSAH(bvh,mesh,gtype,geomID,0);}
+      };
+      template<>
       struct SAHBuilder<8,TriangleMesh,Triangle4> {
         SAHBuilder () {}
         Builder* operator () (void* bvh, TriangleMesh* mesh, size_t geomID, Geometry::GTypeMask /*gtype*/) { return BVH8Triangle4MeshBuilderSAH(bvh,mesh,geomID,0);}
@@ -180,6 +202,11 @@ namespace embree
       struct SAHBuilder<8,Instance,InstancePrimitive> {
         SAHBuilder () {}
         Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH8InstanceMeshBuilderSAH(bvh,mesh,gtype,geomID,0);}
+      };
+      template<>
+      struct SAHBuilder<8,InstanceArray,InstanceArrayPrimitive> {
+        SAHBuilder () {}
+        Builder* operator () (void* bvh, InstanceArray* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH8InstanceArrayMeshBuilderSAH(bvh,mesh,gtype,geomID,0);}
       };
 
       template<int N, typename Mesh, typename Primitive>
@@ -215,6 +242,11 @@ namespace embree
         Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH4InstanceMeshRefitSAH(bvh,mesh,gtype,geomID,0);}
       };
       template<>
+      struct RefitBuilder<4,InstanceArray,InstanceArrayPrimitive> {
+        RefitBuilder () {}
+        Builder* operator () (void* bvh, InstanceArray* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH4InstanceArrayMeshRefitSAH(bvh,mesh,gtype,geomID,0);}
+      };
+      template<>
       struct RefitBuilder<8,TriangleMesh,Triangle4> {
         RefitBuilder () {}
         Builder* operator () (void* bvh, TriangleMesh* mesh, size_t geomID, Geometry::GTypeMask /*gtype*/) { return BVH8Triangle4MeshRefitSAH(bvh,mesh,geomID,0);}
@@ -244,7 +276,12 @@ namespace embree
         RefitBuilder () {}
         Builder* operator () (void* bvh, Instance* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH8InstanceMeshRefitSAH(bvh,mesh,gtype,geomID,0);}
       };
-      
+      template<>
+      struct RefitBuilder<8,InstanceArray,InstanceArrayPrimitive> {
+        RefitBuilder () {}
+        Builder* operator () (void* bvh, InstanceArray* mesh, size_t geomID, Geometry::GTypeMask gtype) { return BVH8InstanceArrayMeshRefitSAH(bvh,mesh,gtype,geomID,0);}
+      };
+
       template<int N, typename Mesh, typename Primitive>
       struct MeshBuilder {
         MeshBuilder () {}
